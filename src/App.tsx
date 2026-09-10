@@ -1,6 +1,8 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { Configurator } from './components/Configurator';
 import { SceneBoundary } from './components/SceneBoundary';
+import { DetailViews } from './components/DetailViews';
+import type { AssemblyPart } from './scene/assembly';
 import { configReducer, DEFAULT_CONFIG, isShellColor, validateConfig } from './config/config';
 import type { ShellColor } from './config/config';
 import type { CameraCommand, ViewName, ViewRequest } from './scene/CameraControls';
@@ -22,13 +24,27 @@ export default function App() {
   const [activeView, setActiveView] = useState<ViewName | null>('studio');
   const [attempt, setAttempt] = useState(0);
   const [ready, setReady] = useState(false);
+  const [assembly, setAssembly] = useState(0);
+  const [detail, setDetail] = useState<AssemblyPart | null>(null);
   const selectShell = useCallback((shell: ShellColor) => dispatch({ type: 'select-shell', shell }), []);
   const chooseView = useCallback((name: ViewName) => {
+    setDetail(null);
     setActiveView(name);
     setView((previous) => ({ name, revision: previous.revision + 1 }));
   }, []);
-  const resetBuild = () => { dispatch({ type: 'reset' }); chooseView('studio'); };
-  const zoom = (name: CameraCommand) => setView((previous) => ({ name, revision: previous.revision + 1 }));
+  const resetBuild = () => { dispatch({ type: 'reset' }); setAssembly(0); chooseView('studio'); };
+  const zoom = (name: CameraCommand) => {
+    if (name === 'fit') { setDetail(null); setActiveView(null); }
+    setView((previous) => ({ name, revision: previous.revision + 1 }));
+  };
+  const explode = () => { setAssembly(1); setDetail(null); setActiveView(null); zoom('exploded'); };
+  const selectDetail = (part: AssemblyPart, keyboard: boolean) => {
+    setDetail(part); setActiveView(null);
+    if (part === 'board') setAssembly(1);
+    zoom(part);
+    if (keyboard) document.querySelector('canvas')?.focus({ preventScroll: true });
+    document.querySelector('.viewer')?.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+  };
   const retry = async () => {
     const { useGLTF } = await import('@react-three/drei');
     useGLTF.clear('/models/hs-01.glb');
@@ -81,7 +97,7 @@ export default function App() {
           <div className="scene-wrap" data-testid="device-viewer" data-ready={ready}>
             <SceneBoundary key={attempt} onRetry={retry}>
               <Suspense fallback={<div className="loading-state" role="status"><span className="loading-orbit" />Preparing your handheld…</div>}>
-                <StudioScene config={config} view={view} onReady={onReady} onOrbit={onOrbit} />
+                <StudioScene config={config} view={view} assembly={assembly} onReady={onReady} onOrbit={onOrbit} />
               </Suspense>
             </SceneBoundary>
           </div>
@@ -96,10 +112,15 @@ export default function App() {
             </div>
           </div>
           <p className="viewer-help">Drag to rotate · Scroll or pinch to zoom</p>
+          <div className="assembly-panel">
+            <div className="assembly-heading"><span><span className="orange-square" /> Inside the HS–01</span><div className="assembly-actions"><button onClick={explode} aria-pressed={assembly === 1}>Explode</button><button onClick={() => { setAssembly(0); chooseView('studio'); }}>Assemble</button></div></div>
+            <label className="assembly-slider"><span>Assembly</span><input type="range" min="0" max="100" step="1" value={Math.round(assembly*100)} onChange={(event) => setAssembly(Number(event.target.value)/100)} aria-valuetext={`${Math.round(assembly*100)} percent exploded`} /><output>{Math.round(assembly*100)}%</output></label>
+          </div>
         </section>
         <div id="customize"><Configurator config={config} onShell={selectShell} onButtons={(buttons) => dispatch({ type: 'select-buttons', buttons })} onFinish={(finish) => dispatch({ type: 'select-finish', finish })} onReset={resetBuild} /></div>
       </div>
       <div className="workbench-caption"><span><span className="caption-symbol" aria-hidden="true">↳</span> Designed to be held. Made to be personal.</span><span>ORIGINAL HARDWARE CONCEPT / HS–01</span></div>
+      <DetailViews selected={detail} onSelect={selectDetail} />
     </main>
     <footer className="site-footer"><span>An independent study by <strong>Kareem Alwan</strong></span><span className="footer-wordmark">GOOD THINGS. SMALL FORM.</span></footer>
   </div>;

@@ -1,0 +1,253 @@
+{
+  "testedAt": "2026-09-10T17:30:31.656Z",
+  "url": "http://127.0.0.1:5173/",
+  "browser": "152.0.7977.83",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "modes": {
+    "solid": {
+      "frames": 862,
+      "calls": 26,
+      "triangles": 54785,
+      "geometries": 39,
+      "textures": 7,
+      "camera": [
+        6.947275812901615,
+        3.291560834509944,
+        8.542408989016257
+      ],
+      "zoom": {
+        "zoom": 1,
+        "zoomGoal": 1,
+        "fit": 11.492248051770957,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "min": 0.56,
+        "max": 1.5
+      },
+      "materials": {
+        "shell": "dad5c8",
+        "buttons": "333b37",
+        "transmission": 0
+      },
+      "assembly": {
+        "progress": 0,
+        "layers": [
+          {
+            "id": "front-shell",
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "controls",
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "display",
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "board",
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "rear-shell",
+            "position": [
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "dpr": 1,
+      "renderer": "WebKit WebGL",
+      "samples": 666,
+      "medianMs": 4.2000000001862645,
+      "p95Ms": 5.7999999998137355,
+      "idleFramesOverOneSecond": 0
+    },
+    "translucent": {
+      "frames": 1737,
+      "calls": 69,
+      "triangles": 136570,
+      "geometries": 50,
+      "textures": 8,
+      "camera": [
+        9.356528696148512,
+        3.019875235299193,
+        7.156782969450022
+      ],
+      "zoom": {
+        "zoom": 1,
+        "zoomGoal": 1,
+        "fit": 12.160749078508026,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "min": 0.56,
+        "max": 1.5
+      },
+      "materials": {
+        "shell": "e5e2d9",
+        "buttons": "333b37",
+        "transmission": 0.76
+      },
+      "assembly": {
+        "progress": 0,
+        "layers": [
+          {
+            "id": "front-shell",
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "controls",
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "display",
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "board",
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "rear-shell",
+            "position": [
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "dpr": 1,
+      "renderer": "WebKit WebGL",
+      "samples": 694,
+      "medianMs": 4.199999999254942,
+      "p95Ms": 5.1000000005587935,
+      "idleFramesOverOneSecond": 0
+    },
+    "exploded": {
+      "frames": 2620,
+      "calls": 37,
+      "triangles": 78618,
+      "geometries": 50,
+      "textures": 8,
+      "camera": [
+        13.430317212871472,
+        4.45203346830032,
+        5.63941363817988
+      ],
+      "zoom": {
+        "zoom": 1,
+        "zoomGoal": 1,
+        "fit": 15.231448014673692,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "min": 0.56,
+        "max": 1.5
+      },
+      "materials": {
+        "shell": "dad5c8",
+        "buttons": "333b37",
+        "transmission": 0
+      },
+      "assembly": {
+        "progress": 1,
+        "layers": [
+          {
+            "id": "front-shell",
+            "position": [
+              0,
+              0,
+              2.6
+            ]
+          },
+          {
+            "id": "controls",
+            "position": [
+              0,
+              0,
+              1.7
+            ]
+          },
+          {
+            "id": "display",
+            "position": [
+              0,
+              0,
+              0.6
+            ]
+          },
+          {
+            "id": "board",
+            "position": [
+              0,
+              0,
+              -0.65
+            ]
+          },
+          {
+            "id": "rear-shell",
+            "position": [
+              0,
+              0,
+              -2.4
+            ]
+          }
+        ]
+      },
+      "dpr": 1,
+      "renderer": "WebKit WebGL",
+      "samples": 683,
+      "medianMs": 4.2000000001862645,
+      "p95Ms": 5.7000000001862645,
+      "idleFramesOverOneSecond": 0
+    }
+  },
+  "note": "Installed Chrome headless on this Windows host. Same scripted orbit and wait interval as the before benchmark. Frame intervals measure render cadence, not GPU execution time or guaranteed FPS. Mobile is viewport/touch emulation.",
+  "errors": []
+}

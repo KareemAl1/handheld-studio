@@ -167,7 +167,6 @@ test('front-to-back transition stays outside the device after an idle period', a
   await page.getByRole('button', { name: 'Front', exact: true }).click();
   await settle(page);
   await page.waitForTimeout(900);
-  const radius = await page.evaluate(() => Math.hypot(...window.__HS_STUDIO__!.snapshot().camera));
   const trajectory = page.evaluate(() => new Promise<number[][]>((resolve) => {
     const samples: number[][] = [];
     const start = performance.now();
@@ -180,8 +179,9 @@ test('front-to-back transition stays outside the device after an idle period', a
   }));
   await page.getByRole('button', { name: 'Back', exact: true }).click();
   const positions = await trajectory;
-  expect(Math.min(...positions.map((position) => Math.hypot(...position)))).toBeGreaterThan(radius * 0.98);
-  expect(positions.filter((position) => Math.abs(position[2]) < radius * 0.7).length).toBeGreaterThan(3);
+  // Radius now adapts to orientation; the invariant is clearance of the device.
+  expect(Math.min(...positions.map((position) => Math.hypot(...position)))).toBeGreaterThan(4.1);
+  expect(positions.filter((position) => Math.abs(position[2]) / Math.hypot(...position) < 0.7).length).toBeGreaterThan(3);
   await settle(page);
 });
 
@@ -290,7 +290,7 @@ test('controls remain fully inside their panels at narrow widths and 200 percent
       await page.evaluate((size) => { document.documentElement.style.fontSize = `${size}px`; }, textSize);
       await settle(page);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `page overflow at ${width}px / ${textSize}px text`).toBe(true);
-      for (const [panel, selector] of [['.configurator', 'input,button'], ['.viewer-toolbar', 'button']]) {
+      for (const [panel, selector] of [['.configurator', 'input,button'], ['.viewer-toolbar', 'button'], ['.assembly-panel', 'input,button'], ['.detail-options', 'button']]) {
         const bounds = (await page.locator(panel).boundingBox())!;
         for (const control of await page.locator(`${panel} ${selector.split(',').join(`,${panel} `)}`).all()) {
           const rect = (await control.boundingBox())!;

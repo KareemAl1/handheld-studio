@@ -7,14 +7,18 @@ import { BUTTONS, SHELLS } from '../config/config';
 import type { Configuration } from '../config/config';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { makeGrainTexture, makeScreenTexture } from './textures';
+import { ASSEMBLY_PARTS, assemblyOffset, clampAssembly } from './assembly';
+import { batchAssemblyGeometry } from './optimizeGeometry';
+import type { MutableRefObject } from 'react';
 
 const colorDifference = (a: Color, b: Color) => (a.r-b.r)**2 + (a.g-b.g)**2 + (a.b-b.b)**2;
 
-export function ConsoleModel({ config, onReady }: { config: Configuration; onReady: () => void }) {
+export function ConsoleModel({ config, assembly, progress, onReady, onAssemblyRest }: { config: Configuration; assembly: number; progress: MutableRefObject<number>; onReady: () => void; onAssemblyRest: () => void }) {
   const { scene } = useGLTF('/models/hs-01.glb');
   const { invalidate } = useThree();
   const reduced = useReducedMotion();
   const transition = useRef({ time: 0, active: false });
+  const shadowAssembly = useRef(-1);
   const owned = useMemo(() => {
     const instance = scene.clone(true);
     const copies = new Map<Material, MeshStandardMaterial>();
@@ -79,10 +83,13 @@ export function ConsoleModel({ config, onReady }: { config: Configuration; onRea
         object.geometry = geometry; geometries.push(geometry);
       }
     });
-    return { instance, shellMaterials, buttonMaterials, legendMaterials, internals, geometries, materials: [...copies.values()], screenTexture, grain };
+    const batched = batchAssemblyGeometry(instance, new Set(internals));
+    geometries.push(...batched.geometries);
+    const groups = ASSEMBLY_PARTS.map(part => ({ part, object: instance.getObjectByName(part.node)!, base: instance.getObjectByName(part.node)!.position.clone() }));
+    return { instance, groups, shellMaterials, buttonMaterials, legendMaterials, internals: batched.internals, geometries, materials: [...copies.values()], screenTexture, grain };
   }, [scene]);
   const targets = useMemo(() => ({
-    shell: new Color(SHELLS.find((shell) => shell.id === config.shell)!.hex).lerp(new Color('#ffffff'), config.finish === 'translucent' ? 0.55 : 0),
+    shell: new Color(SHELLS.find((shell) => shell.id === config.shell)!.hex).lerp(new Color('#ffffff'), config.finish === 'translucent' ? 0.28 : 0),
     attenuation: new Color(SHELLS.find((shell) => shell.id === config.shell)!.hex),
     buttons: new Color(BUTTONS.find((button) => button.id === config.buttons)!.hex),
     legend: new Color(config.buttons === 'ivory' ? '#333b37' : '#e5e0d2'),
@@ -93,7 +100,7 @@ export function ConsoleModel({ config, onReady }: { config: Configuration; onRea
   useEffect(() => {
     transition.current = { time: performance.now(), active: true };
     invalidate();
-  }, [targets, reduced, invalidate]);
+  }, [targets, assembly, reduced, invalidate]);
 
   useFrame(() => {
     if (!transition.current.active) return;
@@ -101,20 +108,32 @@ export function ConsoleModel({ config, onReady }: { config: Configuration; onRea
     const blend = reduced ? 1 : 1 - Math.exp(-12 * Math.min((now - transition.current.time) / 1000, 0.05));
     transition.current.time = now;
     let remaining = 0;
+    const goal = clampAssembly(assembly);
+    progress.current += (goal - progress.current) * blend;
+    if (Math.abs(progress.current - goal) < 0.0001) progress.current = goal;
+    if (progress.current === goal && shadowAssembly.current !== goal) {
+      shadowAssembly.current = goal;
+      onAssemblyRest();
+    }
+    remaining += Math.abs(progress.current - goal);
+    owned.groups.forEach(({ part, object, base }) => {
+      object.position.copy(base); object.position.z += assemblyOffset(part.id, progress.current);
+    });
+    owned.instance.userData.assembly = { progress: progress.current, layers: owned.groups.map(({part,object}) => ({id:part.id, position:object.position.toArray()})) };
     for (const material of owned.shellMaterials) {
       material.color.lerp(targets.shell, blend);
-      material.attenuationColor.copy(targets.attenuation);
+      material.attenuationColor.lerp(targets.attenuation, blend);
       const previous = material.transmission;
       material.transmission += (targets.transmission - material.transmission) * blend;
       material.roughness += (targets.roughness - material.roughness) * blend;
       if (Math.abs(material.transmission - targets.transmission) < 0.0001) material.transmission = targets.transmission;
       if ((previous === 0) !== (material.transmission === 0)) material.needsUpdate = true;
-      remaining += Math.abs(material.transmission - targets.transmission) + colorDifference(material.color, targets.shell);
+      remaining += Math.abs(material.transmission - targets.transmission) + colorDifference(material.color, targets.shell) + colorDifference(material.attenuationColor, targets.attenuation);
     }
     for (const [materials, color] of [[owned.buttonMaterials, targets.buttons], [owned.legendMaterials, targets.legend]] as const) {
       for (const material of materials) { material.color.lerp(color, blend); remaining += colorDifference(material.color, color); }
     }
-    owned.internals.forEach((mesh) => { mesh.visible = targets.transmission > 0 || owned.shellMaterials.some((material) => material.transmission > 0.001); });
+    owned.internals.forEach((mesh) => { mesh.visible = progress.current > 0.001 || targets.transmission > 0 || owned.shellMaterials.some((material) => material.transmission > 0.001); });
     owned.instance.userData.materials = { shell: owned.shellMaterials[0]?.color.getHexString(), buttons: owned.buttonMaterials[0]?.color.getHexString(), transmission: owned.shellMaterials[0]?.transmission };
     if (remaining < 0.0000001) {
       owned.shellMaterials.forEach((material) => { material.color.copy(targets.shell); material.roughness = targets.roughness; });

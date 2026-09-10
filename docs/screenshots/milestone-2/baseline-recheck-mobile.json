@@ -1,0 +1,29 @@
+{
+  "browser": "152.0.7977.83",
+  "viewport": {
+    "width": 412,
+    "height": 839
+  },
+  "modes": {
+    "solid": {
+      "frames": 341,
+      "calls": 74,
+      "triangles": 36927,
+      "geometries": 86,
+      "textures": 6,
+      "camera": [
+        8.838893559350888,
+        3.2002318743176326,
+        7.894634802472076
+      ],
+      "dpr": 1.75,
+      "renderer": "WebKit WebGL",
+      "samples": 302,
+      "medianMs": 9,
+      "p95Ms": 18.5,
+      "idleFramesOverOneSecond": 0
+    }
+  },
+  "note": "Installed Chrome headless on this Windows host. Same scripted orbit and wait interval as the before benchmark. Frame intervals measure render cadence, not GPU execution time or guaranteed FPS. Mobile is viewport/touch emulation.",
+  "errors": []
+}

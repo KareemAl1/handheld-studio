@@ -2,7 +2,7 @@
 
 ## React owns configuration; Three owns presentation
 
-`src/config/config.ts` is a pure TypeScript module. Its versioned allowlist accepts only known shell names. The reducer never mutates previous state, and invalid restoration leaves the current valid build intact. Serialization is a small, deterministic `v=1&s=chalk` format with bounds on input length and rejection of duplicate, missing, or extra keys. Local persistence and URL loading are intentionally not wired in this milestone.
+`src/config/config.ts` is a pure TypeScript module. Schema v2 accepts only known shell colors, button colors and finishes. The reducer never mutates previous state, and invalid restoration leaves the current valid build intact. Serialization is deterministic (`v=2&s=chalk&b=charcoal&f=solid`), with input bounds and rejection of duplicate, missing or extra keys. Strict v1 values migrate to default buttons and solid finish. Local persistence and URL loading are not wired yet.
 
 Camera state is separate from product configuration: moving the camera does not change what a future saved build means. Native radio inputs provide keyboard arrow-key behavior, checked state, and accessible labels without recreating those semantics in a canvas.
 
@@ -10,25 +10,37 @@ Camera state is separate from product configuration: moving the camera does not 
 
 `scripts/build_asset.py` authors the model in Blender and saves `assets/source/hs-01.blend`. `scripts/export_asset.py` exports the edited source to `public/models/hs-01.glb`, preserving named mesh parts and material names while excluding lights, cameras, and animations. Both derive paths from their own location. `scripts/run_blender.py` finds Blender through `BLENDER_BIN`, PATH, or its normal Windows installation directory; it installs nothing.
 
-The shell represents 164 × 88 × 19 mm. It exports at 6.4 units wide with X as width, Y as height, and +Z as the front. Separate shell halves, glass, screen, buttons, PCB, battery, shoulders, hardware, and port elements make future exploded and translucent states practical. The solid mode hides interior meshes but keeps them in the asset. Changing shell materials does not require re-exporting geometry.
+The shell represents 164 × 88 × 19 mm. It exports at 6.4 units wide with X as width, Y as height, and +Z as the front. Five aligned parent groups carry the front shell, controls, display, board and rear shell; per-mesh assembly metadata survives export. The shell walls are actually hollow. Solid assembled mode hides interior details except visible port/speaker parts; translucency and explosion reveal them. Internal components are an original layout study, not a verified electronics design.
 
 ## Resource ownership
 
-The GLTF loader caches the original geometry. Each displayed console clones its scene and materials, so changing a shell cannot mutate the cached asset or another instance. The component disposes its owned material copies and generated screen texture; shared imported geometry stays cached. `Screen` is a separate UV-mapped material, ready for a later game texture.
+The GLTF loader caches original geometry. Each console owns its scene and material copies, procedural screen/grain textures and derived geometry; shared imported geometry stays cached. Cleanup disposes only owned resources. `Screen` stays a separate UV-mapped material, ready for a later game texture.
+
+At load time, compatible static meshes sharing a material and visibility policy are combined within each assembly group. This reduces assembled draw calls from 92 to 26 without flattening the five movable layers or changing the editable Blender source. Transform baking preserves world-space shape, normals and UVs; conditional internals remain separate from visible port details. Tests load the real exported GLB and check bounds, triangles, transforms, independent visibility and disposal without mutating cached source buffers.
 
 ## Rendering at rest
 
-The canvas renders on demand. Shell changes explicitly request a render, and OrbitControls requests frames while movement/damping is active. Static environment lighting is generated locally once; no remote HDRI or texture service is required. The contact shadow is cached once because the device geometry stays assembled and stationary in this milestone. Exploded animation will need to invalidate that shadow as geometry moves.
+The canvas renders on demand until camera, material and assembly transitions settle. Static environment lighting is generated locally once; no remote HDRI or texture service is required. Contact shadows refresh when an assembly transition settles and are cached during ordinary orbit. This avoids repeatedly rendering the device into a shadow map while only the camera moves.
 
 Pixel ratio is capped at 1.75. Visible internals are disabled for solid shells. Heavy Three/R3F code loads separately from the React control interface. The Three chunk still exceeds Vite's generic 500 kB warning threshold; it remains an explicit measured cost, not a suppressed warning. A geometry/texture decoder is deferred until it produces a measured transfer or runtime benefit over this small self-contained model.
 
 ## Camera motion
 
-Preset transitions interpolate spherical angles and radius around the device, never a straight line through it. A transition-local clock avoids the large first delta that can follow an idle demand loop. The path uses the shortest angular route. Reduced motion applies presets immediately and disables inertia; manual inspection still works.
+Preset transitions interpolate the shortest spherical-angle path around the target. Framing projects the eight corners of the assembly's conservative bounds into the camera basis, including depth and current orientation. Zoom is a bounded ratio of that fitted distance, and a separate clearance bound keeps the eye outside the full assembly even at close inspection. Fit recenters the object while retaining orientation; Reset restores assembly and camera defaults.
+
+Wheel, trackpad pinch and two-touch pinch use one smoothed zoom path. OrbitControls handles rotation; its built-in radial zoom is disabled because its damping does not smooth radius. Native rotation is suspended during a pinch. A transition-local clock avoids the large first delta after idle. Reduced motion applies targets immediately; changing the preference does not replay the last command.
+
+## Assembly and materials
+
+One normalized assembly value drives absolute Z offsets from immutable group origins. No incremental translations or queued animation clips accumulate, so interrupted and repeated transitions return to the same geometry. Camera bounds follow the displayed assembly value, not just the slider target. Keyboard detail selection moves focus into the viewer; native controls remain next in tab order.
+
+Solid plastic, rubber controls, metal and glass use separate responses to the same studio lights. Translucency uses native physical transmission through closed shell geometry with opaque internals. Surface color is lightened for the translucent variant while volume attenuation carries the selected tint; fully saturated diffuse tint would filter the board colors twice. A deterministic 128px texture supplies fine plastic grain. Material changes ease to their targets without mutating the shared GLTF.
 
 ## Failures and progressive loading
 
 An unavailable WebGL2 context gets a labeled static Chalk poster while the HTML shell controls stay usable. An asset failure offers Retry, which clears the rejected GLTF cache entry and remounts the viewer. A failed JavaScript scene module instead offers Reload page because the browser and React cache rejected module imports. These are distinct recovery paths and are exercised in browser tests.
+
+After a temporary WebGL context loss, Three rebuilds its GPU resources. The studio explicitly invalidates its demand loop and recaptures the environment and contact shadow on restoration. This preserves configuration, assembly and camera state. A regression test forces two loss/restore cycles and compares the restored canvas pixels to the original lit scene.
 
 The optional, feature-detected WebMCP shell action uses the same reducer and validates its input. Unsupported browsers do not need it. Its valid and invalid paths were exercised through the actual in-app browser tool registry.
 

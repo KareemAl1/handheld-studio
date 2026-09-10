@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "testedAt": "2026-09-10T17:26:25.045Z",
+  "browser": "152.0.7977.83",
+  "reducedMotion": true,
+  "checks": [
+    "production module and asset loading",
+    "independent shell color changes rendered pixels",
+    "independent button color changes rendered pixels",
+    "translucent finish changes rendered pixels and preserves both colors",
+    "explode, keyboard assembly slider, and assemble preserve customization",
+    "camera preset, zoom in/out, and Fit restore the composition",
+    "reset restores colors, finish, assembly, and camera",
+    "development diagnostics excluded",
+    "no page errors, console errors, failed requests, or HTTP errors"
+  ],
+  "imageDifferences": {
+    "shellColor": 0.16878829935687417,
+    "buttonColor": 0.019142094406018686,
+    "translucentFinish": 0.1497542773935202,
+    "explode": 0.2876831543502002,
+    "partialAssembly": 0.11942763317558548,
+    "assemble": 0.28760921004732437,
+    "backView": 0.5516548355782065,
+    "zoomIn": 0.5629683139182138,
+    "zoomOut": 0.4875602930469603,
+    "fitRestoration": 0,
+    "resetRestoration": 0
+  },
+  "pageErrors": [],
+  "consoleErrors": [],
+  "failedRequests": [],
+  "httpErrors": [],
+  "elapsedMs": 11085
+}

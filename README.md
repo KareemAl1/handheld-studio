@@ -8,7 +8,7 @@ Node 22.12+ and npm are required. Run `npm ci`, then `npm run preview:start`. Op
 
 The launcher keeps Vite running independently of the launching terminal, checks the scene/model/poster URLs, and reuses a healthy preview. `npm run preview:status` checks it again; `npm run preview:stop` stops only the process recorded by this launcher. Logs and process state stay in ignored `.cache/`. After a reboot, run `npm run preview:start` again. For foreground development with terminal output, `npm run dev` remains available; keep that terminal running.
 
-`npm run build`, `npm run lint`, `npm test`, and `npm run test:e2e` provide the verification commands. Browser tests use installed Google Chrome; no bundled browser download is required. After building, `npm run test:production` starts a temporary preview on port 4173, checks the built app in Chrome, and stops that temporary server.
+`npm run build`, `npm run lint`, `npm test`, and `npm run test:e2e` provide the verification commands. Browser tests use installed Google Chrome; no bundled browser download is required. After building, `npm run test:production` starts a temporary preview on port 4173, checks the built app in Chrome, and stops that temporary server. `npm run test:performance` records solid, translucent and exploded render cadence and idle activity against the local preview; run it without other browser benchmarks in parallel.
 
 ## Ownership
 
@@ -16,11 +16,11 @@ Intended GitHub owner: **KareemAl1**. Before any authenticated GitHub action, ve
 
 No remote has been created or configured.
 
-## First milestone
+## Current local milestone
 
-Inspect the original HS–01 in 3D, select Chalk/Graphite/Ember shell colors, use Studio/Front/Back views, and reset the build. Touch dragging, keyboard radio controls, reduced motion, loading recovery, and an unavailable-WebGL poster are supported.
+Inspect the original HS–01 with drag rotation, smooth wheel/trackpad or pinch zoom, and accessible Zoom/Fit/preset controls. Choose three shell colors, three independent button colors, and solid or tinted translucent plastic. Separate five modeled layers with Explode or the Assembly slider, then select component detail views. Reset restores the entire build, assembly, orientation and zoom. Reduced motion and loading/WebGL recovery are supported.
 
-The screen currently shows an original boot graphic. Translucent shells, finish/button customization, exploded animation, a tiny game, local saves, URL sharing, and image export are future milestones.
+The screen currently shows an original boot graphic. A tiny game, local saves, URL sharing, and image export are future milestones. Internals are an original illustrative hardware concept.
 
 ## Editable assets
 
@@ -34,8 +34,10 @@ Keep `assets/source/hs-01.blend`, both authoring/export scripts, and the exporte
 - [Engineering decisions and interview notes](docs/engineering.md)
 - [Reference review and provenance](docs/references.md)
 - [Measured verification results](docs/verification.md)
+- [Current milestone stages and measured comparison](docs/milestone-2.md)
 - [Preview repair and Chrome verification](docs/preview-repair.md)
-- [Desktop screenshot](docs/screenshots/desktop-chalk.png)
-- [Mobile screenshot](docs/screenshots/mobile-ember.png)
+- [Current desktop](docs/screenshots/milestone-2/final-desktop.png)
+- [Current mobile](docs/screenshots/milestone-2/final-mobile.png)
+- [Exploded assembly](docs/screenshots/milestone-2/exploded-desktop.png)
 
 Tests use the local Vite development server on port 5173, starting it automatically if needed. Performance diagnostics exist only in development. Mobile tests emulate viewport and touch input in installed Chrome; they are not physical-phone measurements.

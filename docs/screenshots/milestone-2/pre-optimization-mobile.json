@@ -1,0 +1,87 @@
+{
+  "viewport": {
+    "width": 412,
+    "height": 839
+  },
+  "browser": "152.0.7977.83",
+  "frames": 699,
+  "calls": 92,
+  "triangles": 54785,
+  "geometries": 140,
+  "textures": 7,
+  "camera": [
+    8.888660247928847,
+    3.0920083561498686,
+    7.533970030531101
+  ],
+  "zoom": {
+    "zoom": 1,
+    "zoomGoal": 1,
+    "fit": 12.055268603334888,
+    "target": [
+      0,
+      0,
+      0
+    ],
+    "min": 0.56,
+    "max": 1.5
+  },
+  "materials": {
+    "shell": "cf532f",
+    "buttons": "333b37",
+    "transmission": 0
+  },
+  "assembly": {
+    "progress": 0,
+    "layers": [
+      {
+        "id": "front-shell",
+        "position": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "controls",
+        "position": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "display",
+        "position": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "board",
+        "position": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "rear-shell",
+        "position": [
+          0,
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "dpr": 1.75,
+  "renderer": "WebKit WebGL",
+  "idleFramesOverOneSecond": 0,
+  "activeSamples": 288,
+  "activeFrameIntervalMedianMs": 9.299999999813735,
+  "activeFrameIntervalP95Ms": 19.40000000037253,
+  "activeFrameIntervalMeanMs": 11.56041666666796,
+  "note": "Development build, scripted mouse orbit, installed Chrome headless on this host. Intervals measure render cadence, not GPU execution time. Mobile is viewport/touch emulation, not physical-device GPU performance."
+}
