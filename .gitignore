@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.npm-cache/
+.cache/
+test-results/
+playwright-report/
+coverage/
+*.log
+.env
+.env.*
+!.env.example
+*.blend1
+*.blend2
+__pycache__/
+.DS_Store
+Thumbs.db
+
