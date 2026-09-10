@@ -35,7 +35,7 @@ function Diagnostics() {
       snapshot: () => ({
         frames, calls: gl.info.render.calls, triangles: gl.info.render.triangles,
         geometries: gl.info.memory.geometries, textures: gl.info.memory.textures,
-        camera: camera.position.toArray(), zoom: camera.userData.studio, dpr: gl.getPixelRatio(),
+        camera: camera.position.toArray(), zoom: camera.userData.studio, materials: scene.getObjectByName('Handheld')?.userData.materials, dpr: gl.getPixelRatio(),
         renderer: gl.getContext().getParameter(gl.getContext().RENDERER) as string,
       }),
       beginMeasure: () => { measuring = true; previous = 0; intervals = []; },

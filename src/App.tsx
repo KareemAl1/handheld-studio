@@ -1,7 +1,7 @@
-import { lazy, Suspense, useCallback, useEffect, useReducer, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { Configurator } from './components/Configurator';
 import { SceneBoundary } from './components/SceneBoundary';
-import { configReducer, DEFAULT_CONFIG, isShellColor } from './config/config';
+import { configReducer, DEFAULT_CONFIG, isShellColor, validateConfig } from './config/config';
 import type { ShellColor } from './config/config';
 import type { CameraCommand, ViewName, ViewRequest } from './scene/CameraControls';
 
@@ -15,7 +15,9 @@ const VIEWS: { id: ViewName; label: string }[] = [
 ];
 
 export default function App() {
-  const [config, dispatch] = useReducer(configReducer, DEFAULT_CONFIG);
+  const [currentConfig, dispatch] = useReducer(configReducer, DEFAULT_CONFIG);
+  // A hot refresh can preserve an older schema in React's in-memory state.
+  const config = useMemo(() => validateConfig(currentConfig) ?? DEFAULT_CONFIG, [currentConfig]);
   const [view, setView] = useState<ViewRequest>({ name: 'studio', revision: 0 });
   const [activeView, setActiveView] = useState<ViewName | null>('studio');
   const [attempt, setAttempt] = useState(0);
@@ -95,7 +97,7 @@ export default function App() {
           </div>
           <p className="viewer-help">Drag to rotate · Scroll or pinch to zoom</p>
         </section>
-        <div id="customize"><Configurator config={config} onShell={selectShell} onReset={resetBuild} /></div>
+        <div id="customize"><Configurator config={config} onShell={selectShell} onButtons={(buttons) => dispatch({ type: 'select-buttons', buttons })} onFinish={(finish) => dispatch({ type: 'select-finish', finish })} onReset={resetBuild} /></div>
       </div>
       <div className="workbench-caption"><span><span className="caption-symbol" aria-hidden="true">↳</span> Designed to be held. Made to be personal.</span><span>ORIGINAL HARDWARE CONCEPT / HS–01</span></div>
     </main>

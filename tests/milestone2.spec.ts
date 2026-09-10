@@ -80,3 +80,39 @@ test('camera: stage one screenshots and reduced-motion keyboard zoom', async ({ 
   await settle(page);
   expect((await page.evaluate(() => window.__HS_STUDIO__!.snapshot().zoom)).zoom).toBe(1);
 });
+
+test('materials: every shell, button and finish combination settles and retains independence', async ({ page }, info) => {
+  test.setTimeout(100_000);
+  await open(page);
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  for (const [shell, hex] of [['Chalk','dad5c8'],['Graphite','363d3b'],['Ember','cf532f']]) {
+    await page.getByRole('radio',{name:shell,exact:true}).check();
+    for (const [button, buttonHex] of [['Charcoal','333b37'],['Ivory','ddd6c5'],['Signal','cf532f']]) {
+      await page.getByRole('radio',{name:button,exact:true}).check();
+      for (const finish of ['Solid','Translucent']) {
+        await page.getByRole('radio',{name:finish,exact:true}).check();
+        await settle(page);
+        const state = await page.evaluate(() => window.__HS_STUDIO__!.snapshot());
+        if (finish === 'Solid') expect(state.materials.shell).toBe(hex);
+        else expect(state.materials.shell).not.toBe(hex);
+        expect(state.materials.buttons).toBe(buttonHex);
+        expect(state.materials.transmission).toBe(finish === 'Solid' ? 0 : 0.76);
+        await expect(page.getByRole('radio',{name:shell,exact:true})).toBeChecked();
+        await expect(page.getByRole('radio',{name:button,exact:true})).toBeChecked();
+      }
+    }
+  }
+  expect(errors).toEqual([]);
+  await page.getByRole('radio',{name:'Ivory',exact:true}).check();
+  await page.getByRole('button',{name:'Back',exact:true}).click();
+  await settle(page);
+  await page.evaluate(() => scrollTo(0,0));
+  await page.screenshot({path:`docs/screenshots/milestone-2/material-translucent-${info.project.name}.png`,fullPage:true});
+  await page.getByRole('button',{name:'Reset build'}).click();
+  await settle(page);
+  await page.evaluate(() => scrollTo(0,0));
+  await page.screenshot({path:`docs/screenshots/milestone-2/material-solid-${info.project.name}.png`,fullPage:true});
+  const reset = await page.evaluate(() => window.__HS_STUDIO__!.snapshot());
+  expect(reset.materials).toEqual({shell:'dad5c8',buttons:'333b37',transmission:0});
+});
