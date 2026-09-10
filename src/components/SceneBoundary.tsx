@@ -16,7 +16,8 @@ export class SceneBoundary extends Component<{ children: ReactNode; onRetry: () 
   state = { failed: false, moduleFailed: false };
   static getDerivedStateFromError(error: Error) { return { failed: true, moduleFailed: error.name === 'ViewerModuleError' }; }
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error('Handheld viewer failed:', error.message, info.componentStack);
+    // Preserve the original import error and its cause for network diagnosis.
+    console.error('Handheld viewer failed:', error, info.componentStack);
   }
   render() {
     return this.state.failed ? <SceneFallback moduleFailed={this.state.moduleFailed} onRetry={this.props.onRetry} /> : this.props.children;

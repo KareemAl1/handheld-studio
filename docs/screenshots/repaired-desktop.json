@@ -1,0 +1,39 @@
+{
+  "browser": "152.0.7977.83",
+  "headless": false,
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "webgl": {
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "contextLost": false
+  },
+  "poster": {
+    "width": 1400,
+    "height": 1000
+  },
+  "assets": {
+    "/src/scene/StudioScene.tsx": 200,
+    "/models/hs-01.glb": 200,
+    "/images/hs-01-poster.webp": 200
+  },
+  "differences": {
+    "Graphite": 0.25935577516056735,
+    "Ember": 0.2589327346840546
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": [],
+  "httpErrors": [],
+  "interactions": [
+    "Chalk",
+    "Graphite",
+    "Ember",
+    "drag rotation",
+    "Back",
+    "Front",
+    "Studio",
+    "Reset build"
+  ]
+}

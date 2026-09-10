@@ -4,7 +4,9 @@ An original interactive handheld design by Kareem Alwan. React, TypeScript, Vite
 
 ## Local development
 
-Node 22.12+ and npm are required. Run `npm ci`, then `npm run dev`.
+Node 22.12+ and npm are required. Run `npm ci`, then `npm run preview:start`. Open [the local studio](http://127.0.0.1:5173).
+
+The launcher keeps Vite running independently of the launching terminal, checks the scene/model/poster URLs, and reuses a healthy preview. `npm run preview:status` checks it again; `npm run preview:stop` stops only the process recorded by this launcher. Logs and process state stay in ignored `.cache/`. After a reboot, run `npm run preview:start` again. For foreground development with terminal output, `npm run dev` remains available; keep that terminal running.
 
 `npm run build`, `npm run lint`, `npm test`, and `npm run test:e2e` provide the verification commands. Browser tests use installed Google Chrome; no bundled browser download is required. After building, `npm run test:production` starts a temporary preview on port 4173, checks the built app in Chrome, and stops that temporary server.
 
@@ -32,6 +34,7 @@ Keep `assets/source/hs-01.blend`, both authoring/export scripts, and the exporte
 - [Engineering decisions and interview notes](docs/engineering.md)
 - [Reference review and provenance](docs/references.md)
 - [Measured verification results](docs/verification.md)
+- [Preview repair and Chrome verification](docs/preview-repair.md)
 - [Desktop screenshot](docs/screenshots/desktop-chalk.png)
 - [Mobile screenshot](docs/screenshots/mobile-ember.png)
 

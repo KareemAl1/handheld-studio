@@ -39,6 +39,78 @@ async function tabTo(page: Page, locator: Locator) {
   throw new Error('Control could not be reached using Tab');
 }
 
+test('preview loads real assets and WebGL, then completes every shell and camera interaction', async ({ page }, testInfo) => {
+  const consoleErrors: string[] = [];
+  const pageErrors: string[] = [];
+  const failedRequests: string[] = [];
+  const httpErrors: string[] = [];
+  const assets: Record<string, number> = {};
+  page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
+  page.on('pageerror', (error) => pageErrors.push(error.message));
+  page.on('requestfailed', (request) => failedRequests.push(`${request.url()}: ${request.failure()?.errorText}`));
+  page.on('response', (response) => {
+    const path = new URL(response.url()).pathname;
+    if (response.status() >= 400) httpErrors.push(`${path}: ${response.status()}`);
+    if (path === '/src/scene/StudioScene.tsx' || path === '/models/hs-01.glb' || path === '/images/hs-01-poster.webp') assets[path] = response.status();
+  });
+  await openStudio(page);
+  const webgl = await page.locator('canvas').evaluate((canvas) => {
+    const gl = (canvas as HTMLCanvasElement).getContext('webgl2')!;
+    return { version: String(gl.getParameter(gl.VERSION)), contextLost: gl.isContextLost() };
+  });
+  expect(webgl.version).toContain('WebGL 2.0');
+  expect(webgl.contextLost).toBe(false);
+  const poster = await page.evaluate(async () => {
+    const image = new Image();
+    image.src = '/images/hs-01-poster.webp';
+    await image.decode();
+    return { width: image.naturalWidth, height: image.naturalHeight };
+  });
+  expect(poster.width).toBeGreaterThan(0);
+  const canvas = page.locator('canvas');
+  const chalk = await canvas.screenshot();
+  const differences: Record<string, number> = {};
+  for (const shell of ['Graphite', 'Ember']) {
+    await page.getByRole('radio', { name: shell, exact: true }).check();
+    await settle(page);
+    differences[shell] = pixelDifference(await canvas.screenshot(), chalk);
+    expect(differences[shell]).toBeGreaterThan(0.08);
+  }
+  const initialCamera = await page.evaluate(() => window.__HS_STUDIO__!.snapshot().camera);
+  const box = (await canvas.boundingBox())!;
+  await page.mouse.move(box.x + box.width * 0.4, box.y + box.height * 0.5);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * 0.55, box.y + box.height * 0.56, { steps: 12 });
+  await page.mouse.up();
+  await settle(page);
+  expect(await page.evaluate(() => window.__HS_STUDIO__!.snapshot().camera)).not.toEqual(initialCamera);
+  for (const view of ['Back', 'Front', 'Studio']) {
+    await page.getByRole('button', { name: view, exact: true }).click();
+    await settle(page);
+    const camera = await page.evaluate(() => window.__HS_STUDIO__!.snapshot().camera);
+    if (view === 'Back') expect(camera[2]).toBeLessThan(0);
+    else expect(camera[2]).toBeGreaterThan(0);
+    if (view === 'Studio') expect(camera[0]).toBeGreaterThan(1);
+    else expect(Math.abs(camera[0])).toBeLessThan(0.001);
+    await expect(page.getByRole('button', { name: view, exact: true })).toHaveAttribute('aria-pressed', 'true');
+  }
+  await page.getByRole('button', { name: 'Reset build' }).click();
+  await settle(page);
+  await expect(page.getByRole('radio', { name: 'Chalk', exact: true })).toBeChecked();
+  expect(pixelDifference(await canvas.screenshot(), chalk)).toBeLessThan(0.012);
+  expect(assets).toEqual({ '/src/scene/StudioScene.tsx': 200, '/models/hs-01.glb': 200, '/images/hs-01-poster.webp': 200 });
+  expect({ consoleErrors, pageErrors, failedRequests, httpErrors }).toEqual({ consoleErrors: [], pageErrors: [], failedRequests: [], httpErrors: [] });
+  await mkdir('docs/screenshots', { recursive: true });
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.screenshot({ path: `docs/screenshots/repaired-${testInfo.project.name}.png`, fullPage: true });
+  await writeFile(`docs/screenshots/repaired-${testInfo.project.name}.json`, JSON.stringify({
+    browser: page.context().browser()!.version(), headless: testInfo.project.use.headless ?? true,
+    viewport: page.viewportSize(), webgl, poster, assets, differences,
+    consoleErrors, pageErrors, failedRequests, httpErrors,
+    interactions: ['Chalk', 'Graphite', 'Ember', 'drag rotation', 'Back', 'Front', 'Studio', 'Reset build'],
+  }, null, 2));
+});
+
 test('shell changes the rendered device after idle and reset restores it', async ({ page, isMobile }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
@@ -201,6 +273,8 @@ test('failed scene module offers a working page reload', async ({ page }) => {
   await page.route('**/src/scene/StudioScene.tsx*', (route) => route.abort());
   await page.goto('/');
   await expect(page.getByText('The viewer couldn’t load', { exact: true })).toBeVisible();
+  const poster = page.getByRole('img', { name: 'HS–01 handheld in its default Chalk shell' });
+  await expect.poll(() => poster.evaluate((image) => (image as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
   await page.unroute('**/src/scene/StudioScene.tsx*');
   await page.getByRole('button', { name: 'Reload page' }).click();
   await expect(page.getByTestId('device-viewer')).toHaveAttribute('data-ready', 'true');

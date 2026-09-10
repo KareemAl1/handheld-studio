@@ -2,6 +2,8 @@
 
 Verified locally on **2026-09-10**. No remote repository, push, deployment, or authenticated GitHub action was performed during implementation. The preview is served on `http://127.0.0.1:5173/` while its local development process is running.
 
+The subsequent local-server failure, durable preview launcher, and fresh embedded/standalone Chrome checks are documented in [preview-repair.md](preview-repair.md). Use `npm run preview:start` to keep the preview independent of a temporary terminal session.
+
 ## Results
 
 | Check | Actual result |
