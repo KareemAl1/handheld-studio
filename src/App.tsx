@@ -3,7 +3,7 @@ import { Configurator } from './components/Configurator';
 import { SceneBoundary } from './components/SceneBoundary';
 import { configReducer, DEFAULT_CONFIG, isShellColor } from './config/config';
 import type { ShellColor } from './config/config';
-import type { ViewName, ViewRequest } from './scene/CameraControls';
+import type { CameraCommand, ViewName, ViewRequest } from './scene/CameraControls';
 
 const StudioScene = lazy(() => import('./scene/StudioScene').catch((cause: unknown) => {
   const error = new Error('The 3D viewer module could not load.', { cause });
@@ -26,6 +26,7 @@ export default function App() {
     setView((previous) => ({ name, revision: previous.revision + 1 }));
   }, []);
   const resetBuild = () => { dispatch({ type: 'reset' }); chooseView('studio'); };
+  const zoom = (name: CameraCommand) => setView((previous) => ({ name, revision: previous.revision + 1 }));
   const retry = async () => {
     const { useGLTF } = await import('@react-three/drei');
     useGLTF.clear('/models/hs-01.glb');
@@ -83,11 +84,16 @@ export default function App() {
             </SceneBoundary>
           </div>
           <div className="viewer-toolbar">
-            <span className="rotate-hint"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9c1-5 15-5 16 0M20 15c-1 5-15 5-16 0M4 5v4h4M20 19v-4h-4" /></svg>Drag to explore</span>
+            <div className="zoom-controls" role="group" aria-label="Viewer zoom">
+              <button aria-label="Zoom out" onClick={() => zoom('zoom-out')}>−</button>
+              <button onClick={() => zoom('fit')}>Fit</button>
+              <button aria-label="Zoom in" onClick={() => zoom('zoom-in')}>+</button>
+            </div>
             <div className="view-controls" role="group" aria-label="Device camera view">
               {VIEWS.map(({ id, label }) => <button key={id} aria-pressed={activeView === id} onClick={() => chooseView(id)}>{label}</button>)}
             </div>
           </div>
+          <p className="viewer-help">Drag to rotate · Scroll or pinch to zoom</p>
         </section>
         <div id="customize"><Configurator config={config} onShell={selectShell} onReset={resetBuild} /></div>
       </div>

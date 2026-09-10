@@ -1,0 +1,25 @@
+{
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "browser": "152.0.7977.83",
+  "frames": 1247,
+  "calls": 74,
+  "triangles": 36927,
+  "geometries": 86,
+  "textures": 6,
+  "camera": [
+    5.05855886608955,
+    2.3866692791807873,
+    6.191211889587633
+  ],
+  "dpr": 1,
+  "renderer": "WebKit WebGL",
+  "idleFramesOverOneSecond": 0,
+  "activeSamples": 657,
+  "activeFrameIntervalMedianMs": 4.199999999720603,
+  "activeFrameIntervalP95Ms": 4.7000000001862645,
+  "activeFrameIntervalMeanMs": 4.166210045661675,
+  "note": "Development build, scripted mouse orbit, installed Chrome headless on this host. Intervals measure render cadence, not GPU execution time. Mobile is viewport/touch emulation, not physical-device GPU performance."
+}

@@ -14,7 +14,7 @@ interface Document {
 
 interface Window {
   __HS_STUDIO__?: {
-    snapshot(): { frames: number; calls: number; triangles: number; geometries: number; textures: number; camera: number[]; dpr: number; renderer: string };
+    snapshot(): { frames: number; calls: number; triangles: number; geometries: number; textures: number; camera: number[]; zoom: { zoom: number; zoomGoal: number; fit: number; min: number; max: number }; dpr: number; renderer: string };
     beginMeasure(): void;
     endMeasure(): number[];
     poster(): string;

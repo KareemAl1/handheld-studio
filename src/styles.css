@@ -902,3 +902,19 @@ button:disabled {
 .workbench-title > div {
   min-width: 0;
 }
+
+/* Inspection controls keep full touch targets at every breakpoint. */
+.scene-wrap { min-height: 430px; height: 560px; }
+.viewer-toolbar { padding-bottom: 10px; gap: 8px; }
+.zoom-controls { display: flex; gap: 2px; border: 1px solid #d9dcd0; border-radius: 28px; padding: 3px; }
+.zoom-controls button { min-width: 44px; min-height: 44px; border-radius: 24px; font-size: 1rem; }
+.zoom-controls button:first-child,.zoom-controls button:last-child { font-size: 1.4rem; }
+.zoom-controls button:hover { background: #faf9f5; }
+.view-controls button { min-height: 44px; font-size: .9375rem; }
+.viewer-help { margin: 0; padding: 6px 28px 20px; text-align: center; font-size: .875rem; color: #626c59; }
+@media(max-width:760px) {
+  .scene-wrap { height: 360px; min-height: 360px; }
+  .viewer-toolbar { justify-content: center; padding: 0 10px 6px; }
+  .viewer-help { font-size: .8125rem; padding: 6px 12px 18px; }
+  .view-controls button { padding: 9px 12px; }
+}
