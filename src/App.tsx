@@ -9,6 +9,8 @@ import type { CameraCommand, ViewName, ViewRequest } from './scene/CameraControl
 import { GameSession } from './game/session';
 import { useGameLoop } from './game/useGameLoop';
 import { GamePanel } from './components/GamePanel';
+import { getInitialBuild } from './config/persistence';
+import { BuildActions } from './components/BuildActions';
 
 const StudioScene = lazy(() => import('./scene/StudioScene').catch((cause: unknown) => {
   const error = new Error('The 3D viewer module could not load.', { cause });
@@ -20,7 +22,8 @@ const VIEWS: { id: ViewName; label: string }[] = [
 ];
 
 export default function App() {
-  const [currentConfig, dispatch] = useReducer(configReducer, DEFAULT_CONFIG);
+  const [initialBuild] = useState(() => getInitialBuild(window.location.search, () => window.localStorage));
+  const [currentConfig, dispatch] = useReducer(configReducer, initialBuild.config);
   // A hot refresh can preserve an older schema in React's in-memory state.
   const config = useMemo(() => validateConfig(currentConfig) ?? DEFAULT_CONFIG, [currentConfig]);
   const [view, setView] = useState<ViewRequest>({ name: 'studio', revision: 0 });
@@ -159,6 +162,7 @@ export default function App() {
         <div id="customize"><Configurator config={config} onShell={selectShell} onButtons={(buttons) => dispatch({ type: 'select-buttons', buttons })} onFinish={(finish) => dispatch({ type: 'select-finish', finish })} onReset={resetBuild} /></div>
       </div>
       <div className="workbench-caption"><span><span className="caption-symbol" aria-hidden="true">↳</span> Designed to be held. Made to be personal.</span><span>ORIGINAL HARDWARE CONCEPT / HS–01</span></div>
+      <BuildActions config={config} initialMessage={initialBuild.message} onRestore={value => dispatch({type:'restore',value})} />
       {!playing && <DetailViews selected={detail} onSelect={selectDetail} />}
     </main>
     <footer className="site-footer"><span>An independent study by <strong>Kareem Alwan</strong></span><span className="footer-wordmark">GOOD THINGS. SMALL FORM.</span></footer>

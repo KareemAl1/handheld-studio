@@ -1039,6 +1039,20 @@ button:disabled { cursor: not-allowed; opacity: .45; transform: none; }
 .game-controls .game-action { color:#f9f7ed; background:#344137; border-color:#344137; }
 .game-controls button:not(:disabled):hover { box-shadow:0 3px 9px #26302818; }
 .game-instructions { text-align:center; font-size:.875rem; line-height:1.7; color:#626c59; margin:20px 0 0; }
+.build-actions { padding:26px 0 30px; margin-bottom:22px; border-top:1px solid var(--line); }
+.build-actions-heading { display:flex; justify-content:space-between; align-items:end; flex-wrap:wrap; gap:16px; margin-bottom:22px; }
+.build-actions-heading h2 { font-size:2rem; font-weight:400; letter-spacing:-1px; margin:10px 0 0; }
+.build-actions-heading h2 span { color:var(--orange); }
+.build-actions-heading p { font-size:.9375rem; color:#626c59; margin:0; }
+.build-action-buttons { display:flex; flex-wrap:wrap; gap:10px; }
+.build-action-buttons button { display:flex; align-items:center; justify-content:space-between; gap:28px; min-height:48px; padding:12px 18px; min-width:170px; border:1px solid #c8ccbf; border-radius:6px; background:#f8f7f1; font-size:.9375rem; }
+.build-action-buttons button span { color:var(--orange); }
+.build-action-buttons button:hover { background:#ecebe2; }
+.build-feedback { font-size:.9375rem; line-height:1.6; margin:18px 0 8px; color:#43513f; min-height:1.6em; }
+.local-link-note { font-size:.8125rem; color:#68715e; line-height:1.6; margin:0; }
+.share-link { display:block; max-width:800px; font-size:.875rem; margin:14px 0; }
+.share-link input { display:block; margin-top:8px; width:100%; min-height:46px; border:1px solid #9aa18d; border-radius:5px; padding:12px; background:#faf9f3; color:var(--ink); font: .875rem Consolas,monospace; }
+.share-link input:focus-visible { outline:2px solid var(--orange); outline-offset:3px; }
 @media(max-width:600px) {
   .play-launch { margin:0 18px 20px; }
   .play-launch button { width:100%; }
@@ -1048,4 +1062,7 @@ button:disabled { cursor: not-allowed; opacity: .45; transform: none; }
   .exit-play { padding:10px 12px; }
   .game-controls { grid-template-columns:56px minmax(0,1fr) 56px; gap:8px; }
   .game-scoreline { margin:20px 0; gap:8px; font-size:.9375rem; }
+  .build-action-buttons { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .build-action-buttons button { min-width:0; gap:10px; padding:12px; text-align:left; }
+  .build-actions-heading h2 { font-size:1.75rem; }
 }
