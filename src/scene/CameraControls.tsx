@@ -9,14 +9,15 @@ import { clampZoom, fitDistance, ZOOM_LIMITS } from './framing';
 import type { AssemblyPart } from './assembly';
 
 export type ViewName = 'studio' | 'front' | 'back';
-export type CameraCommand = ViewName | AssemblyPart | 'exploded' | 'fit' | 'zoom-in' | 'zoom-out';
+export type CameraCommand = ViewName | AssemblyPart | 'exploded' | 'fit' | 'zoom-in' | 'zoom-out' | 'play';
 export type ViewRequest = { name: CameraCommand; revision: number };
 
-export function CameraControls({ view, progress, loaded, onOrbit }: { view: ViewRequest; progress: MutableRefObject<number>; loaded: boolean; onOrbit: () => void }) {
+export function CameraControls({ view, progress, loaded, onOrbit, locked, onPlayReady }: { view: ViewRequest; progress: MutableRefObject<number>; loaded: boolean; onOrbit: () => void; locked: boolean; onPlayReady: () => void }) {
   const controls = useRef<OrbitControlsImpl>(null);
   const { camera, size, invalidate, gl } = useThree();
   const reduced = useReducedMotion();
   const consumed = useRef<ViewRequest | null>(null);
+  const playReported = useRef(false);
   const state = useRef({ zoom: 1, zoomGoal: 1, moving: false, first: true, time: 0, goal: new Spherical(), sphere: new Spherical(), target: new Vector3(), focus: 'studio' as CameraCommand });
 
   useEffect(() => {
@@ -33,6 +34,7 @@ export function CameraControls({ view, progress, loaded, onOrbit }: { view: View
       return;
     }
     consumed.current = view;
+    playReported.current = false;
     if (view.name === 'zoom-in' || view.name === 'zoom-out') {
       s.zoomGoal = clampZoom(s.zoomGoal * (view.name === 'zoom-in' ? 0.82 : 1 / 0.82));
     } else {
@@ -44,7 +46,7 @@ export function CameraControls({ view, progress, loaded, onOrbit }: { view: View
       }
       if (view.name !== 'fit') {
         const poses: Partial<Record<CameraCommand, [number,number,number]>> = {
-          front: [0,0,1], back: [0,0,-1], studio: [.48,.38,1], exploded: [1.5,.65,1.1],
+          front: [0,0,1], back: [0,0,-1], studio: [.48,.38,1], exploded: [1.5,.65,1.1], play: [0,0,1],
           'front-shell': [.25,.2,1], controls: [.25,.45,1], display: [.22,.2,1], board: [1.5,.65,1.1], 'rear-shell': [-.4,.25,-1],
         };
         const direction = poses[view.name] ?? poses.studio!;
@@ -77,13 +79,14 @@ export function CameraControls({ view, progress, loaded, onOrbit }: { view: View
       invalidate();
     };
     const wheel = (event: WheelEvent) => {
+      if (locked) return;
       event.preventDefault();
       const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? size.height : 1;
       changeZoom(Math.exp(MathUtils.clamp(event.deltaY * unit, -120, 120) * (event.ctrlKey ? 0.012 : 0.0025)));
     };
     const distance = () => { const [a, b] = [...pointers.values()]; return Math.hypot(a[0] - b[0], a[1] - b[1]); };
     const down = (event: PointerEvent) => {
-      if (event.pointerType !== 'touch') return;
+      if (locked || event.pointerType !== 'touch') return;
       pointers.set(event.pointerId, [event.clientX, event.clientY]);
       if (pointers.size === 2) {
         span = distance();
@@ -102,14 +105,15 @@ export function CameraControls({ view, progress, loaded, onOrbit }: { view: View
     };
     const up = (event: PointerEvent) => {
       pointers.delete(event.pointerId); span = 0;
-      if (pointers.size === 0 && controls.current) controls.current.enabled = loaded;
+      if (pointers.size === 0 && controls.current) controls.current.enabled = loaded && !locked;
     };
     element.addEventListener('wheel', wheel, { passive: false });
     element.addEventListener('pointerdown', down);
     element.addEventListener('pointermove', move);
     element.addEventListener('pointerup', up);
     element.addEventListener('pointercancel', up);
-    element.setAttribute('aria-label', 'HS–01 3D model. Drag to rotate; scroll or pinch to zoom. Accessible camera and zoom controls follow.');
+    element.style.touchAction = locked ? 'pan-y' : 'none';
+    element.setAttribute('aria-label', locked ? 'Signal Run on the handheld screen. Use Left and Right or A and D to move. Game controls follow.' : 'HS–01 3D model. Drag to rotate; scroll or pinch to zoom. Accessible camera and zoom controls follow.');
     element.setAttribute('role', 'img');
     element.tabIndex = -1;
     return () => {
@@ -119,7 +123,7 @@ export function CameraControls({ view, progress, loaded, onOrbit }: { view: View
       element.removeEventListener('pointerup', up);
       element.removeEventListener('pointercancel', up);
     };
-  }, [gl, size.height, invalidate, reduced, loaded]);
+  }, [gl, size.height, invalidate, reduced, loaded, locked]);
 
   useFrame(() => {
     if (!loaded) return;
@@ -142,7 +146,7 @@ export function CameraControls({ view, progress, loaded, onOrbit }: { view: View
     const direction = new Vector3().setFromSpherical(s.sphere).normalize();
     const a = progress.current;
     const targets: Partial<Record<CameraCommand, [number,number,number]>> = {
-      'front-shell':[0,0,2.6*a], controls:[2.25,.25,.44+1.7*a], display:[0,.16,.4+.6*a], board:[0,0,-.65*a], 'rear-shell':[0,0,-.35-2.4*a],
+      'front-shell':[0,0,2.6*a], controls:[2.25,.25,.44+1.7*a], display:[0,.16,.4+.6*a], board:[0,0,-.65*a], 'rear-shell':[0,0,-.35-2.4*a], play:[0,.16,.4],
     };
     const goalTarget = new Vector3(...(targets[s.focus] ?? [0,0,0]));
     s.target.lerp(goalTarget, blend);
@@ -150,17 +154,26 @@ export function CameraControls({ view, progress, loaded, onOrbit }: { view: View
     const halfSize = [3.24,1.81,.51+2.6*a];
     const fit = fitDistance(direction, size.width / size.height, halfSize, s.target);
     // Even at maximum inspection zoom the eye stays outside the complete assembly.
-    s.sphere.radius = Math.max(Math.hypot(...halfSize) + s.target.length() + 0.45, fit * s.zoom);
+    let radiusMoving = false;
+    if (s.focus === 'play') {
+      const tangent = Math.tan(16 * Math.PI / 180);
+      const screenDistance = Math.max(3, 1.12 * Math.max(1.82 / (tangent * size.width / size.height), 1.14 / tangent));
+      const desired = screenDistance + 4 * a;
+      s.sphere.radius = MathUtils.lerp(s.sphere.radius, desired, blend);
+      radiusMoving = Math.abs(s.sphere.radius - desired) > .0001;
+      if (!radiusMoving) s.sphere.radius = desired;
+    } else s.sphere.radius = Math.max(Math.hypot(...halfSize) + s.target.length() + 0.45, fit * s.zoom);
     camera.position.setFromSpherical(s.sphere).add(s.target);
     camera.lookAt(s.target);
     controls.current?.target.copy(s.target);
     controls.current?.update();
     camera.userData.studio = { zoom: s.zoom, zoomGoal: s.zoomGoal, fit, target: s.target.toArray(), min: ZOOM_LIMITS.min, max: ZOOM_LIMITS.max };
-    if (s.moving || s.zoom !== s.zoomGoal || !s.target.equals(goalTarget)) invalidate();
+    if (s.moving || radiusMoving || s.zoom !== s.zoomGoal || !s.target.equals(goalTarget)) invalidate();
+    else if (locked && a === 0 && !playReported.current) { playReported.current = true; onPlayReady(); }
   });
 
-  return <OrbitControls ref={controls} makeDefault enabled={loaded}
-    enableZoom={false} enablePan={false} enableDamping={!reduced} dampingFactor={0.13}
+  return <OrbitControls ref={controls} makeDefault enabled={loaded && !locked}
+    enableZoom={false} enablePan={false} enableDamping={!reduced && !locked} dampingFactor={0.13}
     rotateSpeed={0.65} minPolarAngle={0.12} maxPolarAngle={Math.PI * 0.86}
     onStart={() => { state.current.moving = false; if (controls.current) controls.current.enableDamping = !reduced; onOrbit(); }} />;
 }

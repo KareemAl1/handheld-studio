@@ -6,6 +6,9 @@ import type { AssemblyPart } from './scene/assembly';
 import { configReducer, DEFAULT_CONFIG, isShellColor, validateConfig } from './config/config';
 import type { ShellColor } from './config/config';
 import type { CameraCommand, ViewName, ViewRequest } from './scene/CameraControls';
+import { GameSession } from './game/session';
+import { useGameLoop } from './game/useGameLoop';
+import { GamePanel } from './components/GamePanel';
 
 const StudioScene = lazy(() => import('./scene/StudioScene').catch((cause: unknown) => {
   const error = new Error('The 3D viewer module could not load.', { cause });
@@ -26,6 +29,10 @@ export default function App() {
   const [ready, setReady] = useState(false);
   const [assembly, setAssembly] = useState(0);
   const [detail, setDetail] = useState<AssemblyPart | null>(null);
+  const [game] = useState(() => new GameSession());
+  const [playing, setPlaying] = useState(false);
+  const [playReady, setPlayReady] = useState(false);
+  const gameSummary = useGameLoop(game, playing);
   const selectShell = useCallback((shell: ShellColor) => dispatch({ type: 'select-shell', shell }), []);
   const chooseView = useCallback((name: ViewName) => {
     setDetail(null);
@@ -53,6 +60,36 @@ export default function App() {
   };
   const onReady = useCallback(() => setReady(true), []);
   const onOrbit = useCallback(() => setActiveView(null), []);
+  const onPlayReady = useCallback(() => setPlayReady(true), []);
+  const exitPlay = useCallback(() => {
+    game.reset(); setPlaying(false); setPlayReady(false); chooseView('studio');
+    requestAnimationFrame(() => document.querySelector<HTMLButtonElement>('.play-launch button')?.focus({preventScroll:true}));
+  }, [game, chooseView]);
+  const enterPlay = () => {
+    game.reset(); setPlaying(true); setPlayReady(false); setAssembly(0); setDetail(null); setActiveView(null); zoom('play');
+    document.querySelector('canvas')?.focus({preventScroll:true});
+    document.querySelector('.viewer')?.scrollIntoView({block:'start',behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+  };
+  useEffect(() => {
+    if (!playing) return;
+    const key = (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
+      const target = event.target as HTMLElement;
+      if (target.closest('input,textarea,select,[contenteditable=true]')) return;
+      if (event.key === 'Escape') { event.preventDefault(); exitPlay(); return; }
+      if (!playReady) return;
+      const direction = event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a' ? -1 : event.key === 'ArrowRight' || event.key.toLowerCase() === 'd' ? 1 : 0;
+      if (direction) { event.preventDefault(); game.dispatch({type:'move',direction}); }
+      if ((event.key === 'Enter' || event.key === ' ') && !target.closest('button,a')) {
+        event.preventDefault();
+        if (event.repeat) return;
+        const phase = game.getState().phase;
+        game.dispatch({type:phase === 'ready'?'start':phase === 'over'?'restart':phase === 'paused'?'resume':'pause'});
+      }
+    };
+    window.addEventListener('keydown',key);
+    return () => window.removeEventListener('keydown',key);
+  }, [playing, playReady, game, exitPlay]);
 
   useEffect(() => {
     const context = document.modelContext;
@@ -91,17 +128,17 @@ export default function App() {
         <div><p className="eyebrow">THE HANDHELD STUDIO</p><h1>Make it yours<span>.</span></h1></div>
         <p className="title-note">A familiar object.<br />A new point of view.</p>
       </div>
-      <div className="workbench">
+      <div className={`workbench${playing ? ' is-playing' : ''}`}>
         <section className="viewer" aria-label="Interactive HS–01 device viewer">
           <div className="viewer-topline"><span><span className="orange-square" /> HS–01</span><span>164 × 88 × 19 MM</span></div>
           <div className="scene-wrap" data-testid="device-viewer" data-ready={ready}>
             <SceneBoundary key={attempt} onRetry={retry}>
               <Suspense fallback={<div className="loading-state" role="status"><span className="loading-orbit" />Preparing your handheld…</div>}>
-                <StudioScene config={config} view={view} assembly={assembly} onReady={onReady} onOrbit={onOrbit} />
+                <StudioScene config={config} view={view} assembly={assembly} onReady={onReady} onOrbit={onOrbit} playing={playing} game={game} onPlayReady={onPlayReady} />
               </Suspense>
             </SceneBoundary>
           </div>
-          <div className="viewer-toolbar">
+          {!playing && <><div className="viewer-toolbar">
             <div className="zoom-controls" role="group" aria-label="Viewer zoom">
               <button aria-label="Zoom out" onClick={() => zoom('zoom-out')}>−</button>
               <button onClick={() => zoom('fit')}>Fit</button>
@@ -116,11 +153,13 @@ export default function App() {
             <div className="assembly-heading"><span><span className="orange-square" /> Inside the HS–01</span><div className="assembly-actions"><button onClick={explode} aria-pressed={assembly === 1}>Explode</button><button onClick={() => { setAssembly(0); chooseView('studio'); }}>Assemble</button></div></div>
             <label className="assembly-slider"><span>Assembly</span><input type="range" min="0" max="100" step="1" value={Math.round(assembly*100)} onChange={(event) => setAssembly(Number(event.target.value)/100)} aria-valuetext={`${Math.round(assembly*100)} percent exploded`} /><output>{Math.round(assembly*100)}%</output></label>
           </div>
+          <div className="play-launch"><div><span className="eyebrow">MADE FOR A LITTLE PLAY</span><p>An original game. Right on your handheld.</p></div><button onClick={enterPlay} disabled={!ready}>Play Signal Run <span aria-hidden="true">↗</span></button></div></>}
+          {playing && <GamePanel session={game} summary={gameSummary} ready={playReady} onExit={exitPlay} />}
         </section>
         <div id="customize"><Configurator config={config} onShell={selectShell} onButtons={(buttons) => dispatch({ type: 'select-buttons', buttons })} onFinish={(finish) => dispatch({ type: 'select-finish', finish })} onReset={resetBuild} /></div>
       </div>
       <div className="workbench-caption"><span><span className="caption-symbol" aria-hidden="true">↳</span> Designed to be held. Made to be personal.</span><span>ORIGINAL HARDWARE CONCEPT / HS–01</span></div>
-      <DetailViews selected={detail} onSelect={selectDetail} />
+      {!playing && <DetailViews selected={detail} onSelect={selectDetail} />}
     </main>
     <footer className="site-footer"><span>An independent study by <strong>Kareem Alwan</strong></span><span className="footer-wordmark">GOOD THINGS. SMALL FORM.</span></footer>
   </div>;

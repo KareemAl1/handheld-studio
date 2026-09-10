@@ -7,6 +7,7 @@ import { CameraControls } from './CameraControls';
 import type { ViewRequest } from './CameraControls';
 import type { Configuration } from '../config/config';
 import { SceneFallback } from '../components/SceneBoundary';
+import type { GameSession } from '../game/session';
 
 function availableWebGL() {
   try {
@@ -17,15 +18,17 @@ function availableWebGL() {
   } catch { return false; }
 }
 
-function ContextRecovery({ onRestore }: { onRestore: () => void }) {
+function ContextRecovery({ onRestore, game }: { onRestore: () => void; game: GameSession }) {
   const { gl, invalidate } = useThree();
   useEffect(() => {
     // Three recreates GPU resources; demand rendering and one-shot captures
     // still need an explicit refresh after the context is restored.
     const restore = () => { onRestore(); invalidate(); };
+    const lost = () => game.dispatch({type:'pause'});
     gl.domElement.addEventListener('webglcontextrestored', restore);
-    return () => gl.domElement.removeEventListener('webglcontextrestored', restore);
-  }, [gl, invalidate, onRestore]);
+    gl.domElement.addEventListener('webglcontextlost', lost);
+    return () => { gl.domElement.removeEventListener('webglcontextrestored', restore); gl.domElement.removeEventListener('webglcontextlost', lost); };
+  }, [gl, invalidate, onRestore, game]);
   return null;
 }
 
@@ -47,7 +50,7 @@ function Diagnostics() {
       snapshot: () => ({
         frames, calls: gl.info.render.calls, triangles: gl.info.render.triangles,
         geometries: gl.info.memory.geometries, textures: gl.info.memory.textures,
-        camera: camera.position.toArray(), zoom: camera.userData.studio, materials: scene.getObjectByName('Handheld')?.userData.materials, assembly: scene.getObjectByName('Handheld')?.userData.assembly, dpr: gl.getPixelRatio(),
+        camera: camera.position.toArray(), zoom: camera.userData.studio, materials: scene.getObjectByName('Handheld')?.userData.materials, assembly: scene.getObjectByName('Handheld')?.userData.assembly, game: scene.getObjectByName('Handheld')?.userData.game, dpr: gl.getPixelRatio(),
         renderer: gl.getContext().getParameter(gl.getContext().RENDERER) as string,
       }),
       beginMeasure: () => { measuring = true; previous = 0; intervals = []; },
@@ -59,8 +62,8 @@ function Diagnostics() {
   return null;
 }
 
-export default function StudioScene({ config, view, assembly, onReady, onOrbit }: {
-  config: Configuration; view: ViewRequest; assembly: number; onReady: () => void; onOrbit: () => void;
+export default function StudioScene({ config, view, assembly, onReady, onOrbit, playing, game, onPlayReady }: {
+  config: Configuration; view: ViewRequest; assembly: number; onReady: () => void; onOrbit: () => void; playing: boolean; game: GameSession; onPlayReady: () => void;
 }) {
   const [supported] = useState(availableWebGL);
   const [loaded, setLoaded] = useState(false);
@@ -81,11 +84,11 @@ export default function StudioScene({ config, view, assembly, onReady, onOrbit }
         <Lightformer form="rect" intensity={1.4} color="#e8efe9" position={[5, 1, 2]} rotation={[0, -Math.PI / 2, 0]} scale={[4, 7, 1]} />
         <Lightformer form="rect" intensity={2} color="#ffffff" position={[1, 5, -4]} rotation={[Math.PI / 2, 0, 0]} scale={[8, 3, 1]} />
       </Environment>
-      <ConsoleModel config={config} assembly={assembly} progress={progress} onReady={handleReady} onAssemblyRest={refreshShadow} />
+      <ConsoleModel config={config} assembly={assembly} progress={progress} onReady={handleReady} onAssemblyRest={refreshShadow} game={game} playing={playing} />
       <ContactShadows renderOrder={shadowRevision} position={[0, -1.92, 0]} opacity={0.38} scale={18} blur={2.6} far={5} resolution={512} frames={1} color="#414338" />
     </Suspense>
-    <CameraControls view={view} progress={progress} loaded={loaded} onOrbit={onOrbit} />
-    <ContextRecovery onRestore={refreshShadow} />
+    <CameraControls view={view} progress={progress} loaded={loaded} onOrbit={onOrbit} locked={playing} onPlayReady={onPlayReady} />
+    <ContextRecovery onRestore={refreshShadow} game={game} />
     {import.meta.env.DEV && <Diagnostics />}
   </Canvas>;
 }

@@ -10,10 +10,12 @@ import { makeGrainTexture, makeScreenTexture } from './textures';
 import { ASSEMBLY_PARTS, assemblyOffset, clampAssembly } from './assembly';
 import { batchAssemblyGeometry } from './optimizeGeometry';
 import type { MutableRefObject } from 'react';
+import type { GameSession } from '../game/session';
+import { GameScreen } from './GameScreen';
 
 const colorDifference = (a: Color, b: Color) => (a.r-b.r)**2 + (a.g-b.g)**2 + (a.b-b.b)**2;
 
-export function ConsoleModel({ config, assembly, progress, onReady, onAssemblyRest }: { config: Configuration; assembly: number; progress: MutableRefObject<number>; onReady: () => void; onAssemblyRest: () => void }) {
+export function ConsoleModel({ config, assembly, progress, onReady, onAssemblyRest, game, playing }: { config: Configuration; assembly: number; progress: MutableRefObject<number>; onReady: () => void; onAssemblyRest: () => void; game: GameSession; playing: boolean }) {
   const { scene } = useGLTF('/models/hs-01.glb');
   const { invalidate } = useThree();
   const reduced = useReducedMotion();
@@ -149,5 +151,5 @@ export function ConsoleModel({ config, assembly, progress, onReady, onAssemblyRe
     owned.geometries.forEach((geometry) => geometry.dispose());
     owned.screenTexture.dispose(); owned.grain.dispose();
   }, [owned]);
-  return <primitive object={owned.instance} dispose={null} />;
+  return <><primitive object={owned.instance} dispose={null} />{playing && <GameScreen object={owned.instance} session={game} playing />}</>;
 }
