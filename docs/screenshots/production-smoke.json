@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "browser": "152.0.7977.83",
+  "consoleErrors": [],
+  "checks": [
+    "production module loading",
+    "actual rendered shell change",
+    "camera control",
+    "reset",
+    "development diagnostics excluded"
+  ]
+}
