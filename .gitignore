@@ -15,3 +15,13 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
+# Deployment links and regenerable test exports stay local.
+.vercel/
+docs/screenshots/milestone-3/export-assembled-*.png
+docs/screenshots/milestone-3/export-exploded-*.png
+docs/screenshots/milestone-3/export-normal-boot-*.png
+docs/screenshots/milestone-3/export-paused-game-*.png
+docs/screenshots/milestone-3/export-running-game-*.png
+docs/screenshots/milestone-3/export-chalk-solid-mobile.png
+docs/screenshots/milestone-3/export-ember-solid-mobile.png
+docs/screenshots/milestone-3/export-ember-translucent-mobile.png

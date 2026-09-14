@@ -3,9 +3,14 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "tsc --noEmit && vite build",
+    "build": "node scripts/third-party-notices.mjs --check && tsc --noEmit && vite build",
+    "notices:generate": "node scripts/third-party-notices.mjs",
+    "notices:check": "node scripts/third-party-notices.mjs --check",
     "preview": "vite preview --host 127.0.0.1",
     "preview:start": "node scripts/local-preview.mjs start",
     "preview:status": "node scripts/local-preview.mjs status",

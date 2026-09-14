@@ -14,6 +14,7 @@ export function BuildActions({ config, initialMessage, onRestore, exporter }: {
   const [download, setDownload] = useState<{ url: string; name: string; encoded: string } | null>(null);
   useEffect(() => () => { if (download) URL.revokeObjectURL(download.url); }, [download]);
   const visibleLink = shared?.encoded === serializeConfig(config) ? shared.url : '';
+  const localPreview = ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname);
   const clearSharedQuery = () => {
     if (window.location.search) window.history.replaceState(null, '', window.location.pathname + window.location.hash);
   };
@@ -60,6 +61,6 @@ export function BuildActions({ config, initialMessage, onRestore, exporter }: {
     <p className="build-feedback" role="status" aria-live="polite" data-testid="build-feedback">{message}</p>
     {download?.encoded === serializeConfig(config) && <a className="download-png" href={download.url} download={download.name}>Download PNG</a>}
     {visibleLink && <label className="share-link">Share link<input ref={linkInput} aria-label="Share link" type="url" readOnly value={visibleLink} onFocus={event => event.currentTarget.select()} /></label>}
-    <p className="local-link-note">Localhost links only work locally until deployment.</p>
+    <p className="local-link-note">{localPreview ? 'Localhost links only work locally until deployment.' : 'Share links open this build on this site. Saved builds stay in this browser.'}</p>
   </section>;
 }

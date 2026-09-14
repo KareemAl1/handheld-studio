@@ -1,0 +1,22 @@
+# Only dist is served. These authoring/test files are also unnecessary CLI uploads.
+.git/
+.github/
+.vercel/
+node_modules/
+dist/
+.cache/
+.npm-cache/
+test-results/
+playwright-report/
+coverage/
+docs/
+assets/source/
+tests/
+scripts/*
+!scripts/third-party-notices.mjs
+.env
+.env.*
+*.log
+*.blend1
+*.blend2
+__pycache__/
