@@ -1,6 +1,6 @@
 # GitHub and Vercel preparation
 
-Prepared locally on **2026-09-14**. This report is a reviewable publication proposal, not a deployment record. Repository creation, pushing and deployment are still pending final user approval.
+Prepared locally on **2026-09-14**. This historical report records the proposal before approval. The owner subsequently approved publication; see [deployment and live verification](deployment.md) for the published URLs and actual hosted results. Statements below describe the preparation snapshot.
 
 ## Proposed destinations
 

@@ -2,9 +2,9 @@
 
 An original 3D handheld configurator by [Kareem Alwan](https://github.com/KareemAl1), built with React, TypeScript, Vite and React Three Fiber. HS–01 brings tactile product design, inspectable hardware and a small playable game to a warm industrial-design workbench.
 
-**Deployment status:** prepared locally; a public demo is pending approval.
+**[Open the live studio](https://handheld-studio.vercel.app)** · [GitHub repository](https://github.com/KareemAl1/handheld-studio)
 
-![HS–01 in translucent Ember with Ivory buttons, exported from the app](docs/screenshots/milestone-3/production-export.png)
+![HS–01 in translucent Ember with Ivory buttons, exported from the live app](docs/screenshots/live/export-desktop.png)
 
 ## Features
 
@@ -20,9 +20,9 @@ An original 3D handheld configurator by [Kareem Alwan](https://github.com/Kareem
 
 | Studio | Signal Run |
 | --- | --- |
-| ![Desktop configurator](docs/screenshots/milestone-3/final-desktop.png) | ![Signal Run on the actual handheld screen](docs/screenshots/milestone-3/game-running-desktop.png) |
+| ![Live desktop configurator](docs/screenshots/live/site-desktop.png) | ![Signal Run on the live handheld screen](docs/screenshots/live/game-desktop.png) |
 
-[Mobile configurator](docs/screenshots/milestone-3/final-mobile.png) · [Mobile game](docs/screenshots/milestone-3/game-running-mobile.png) · [Exploded assembly](docs/screenshots/milestone-2/exploded-desktop.png)
+[Live mobile configurator](docs/screenshots/live/site-mobile.png) · [Live mobile game](docs/screenshots/live/game-mobile.png) · [Exploded assembly](docs/screenshots/milestone-2/exploded-desktop.png)
 
 These are actual browser captures and app-generated exports, not concept mockups.
 
@@ -46,7 +46,7 @@ npm run build
 npm run preview
 ```
 
-The build checks dependency notices, typechecks the app and outputs static files to `dist/`. Vercel's proposed settings are committed in [vercel.json](vercel.json): Vite, `npm ci`, `npm run build`, output `dist`, Node 22.x. Only `/` and query-string configurations are used, so no catch-all rewrite is needed. See [publication preparation](docs/publication.md) for scope, verification and the approval gate.
+The build checks dependency notices, typechecks the app and outputs static files to `dist/`. Vercel's build settings are committed in [vercel.json](vercel.json): Vite, `npm ci`, `npm run build`, output `dist`. Node 22.x is pinned in `package.json` and the Vercel project settings. Only `/` and query-string configurations are used, so no catch-all rewrite is needed. The Vercel project is connected to this repository; pushes to `main` deploy production. See [deployment and live verification](docs/deployment.md).
 
 ## Controls and saved builds
 
@@ -62,7 +62,7 @@ The build checks dependency notices, typechecks the app and outputs static files
 
 A hidden tab pauses gameplay; returning requires Resume. Reduced motion removes decorative lane scrolling and skips camera/material/assembly tweening.
 
-Save keeps **one configuration per browser origin**. A valid shared URL takes precedence over a saved build without overwriting it. Save or Restore clears an older shared query so the next reload honors that explicit action. Camera, assembly and game progress are not saved. Invalid URL/storage data falls back with feedback. Localhost share links only work locally; deployed links will use that site's origin.
+Save keeps **one configuration per browser origin**. A valid shared URL takes precedence over a saved build without overwriting it. Save or Restore clears an older shared query so the next reload honors that explicit action. Camera, assembly and game progress are not saved. Invalid URL/storage data falls back with feedback. Localhost share links only work locally; the live studio generates public links on `handheld-studio.vercel.app`. Saves made locally do not automatically transfer to the live origin.
 
 ## Engineering decisions
 
@@ -100,7 +100,18 @@ npm run test:performance:game
 
 Browser tests use **installed Google Chrome** via Playwright. They start/reuse the local Vite server. The production check creates its own temporary preview on port 4173 and closes it afterward; all browser profiles/downloads stay inside this project. Run performance measurement separately from other browser work. In environments that restrict the default Vitest config bundler, use `npm test -- --configLoader runner`.
 
+To repeat the public HTTPS smoke test in PowerShell:
+
+```powershell
+$env:HS_LIVE_URL = 'https://handheld-studio.vercel.app'
+npm run test:live
+```
+
+On macOS/Linux: `HS_LIVE_URL=https://handheld-studio.vercel.app npm run test:live`. This test opens fresh isolated Chrome profiles, uses test-only browser saves, grants clipboard permissions within those profiles, and writes evidence to `docs/screenshots/live/`.
+
 The milestone-3 verification record contains **162 passing unit tests**, a full browser run of **79 passes / 5 intentional skips**, and a final focused run of **20 passes / 2 intentional skips**. The runs overlap: together they cover **82 distinct passing cases**, with six context/matrix skips. Production checks exercised actual screen pixels, the complete game loop, saved reload, URL round-trips and decoded PNG downloads. See [the exact results and captures](docs/milestone-3.md) and [the latest publication checks](docs/publication.md).
+
+The **2026-09-14 live HTTPS check passed on desktop and Pixel 7 emulation** in Chrome 152: actual 3D shell changes, the complete game loop, keyboard/touch input, save/reload/restore, native clipboard sharing, invalid URLs and downloaded PNGs. Both contexts recorded zero page/console/network/HTTP errors. Saved and shared model pixels matched their configured reference; exports were opaque 1600 × 1200 PNGs. [Live results and limitations](docs/deployment.md) include the reproducible script and screenshots.
 
 Measured game texture updates were 56 in 2.0028 seconds on desktop and 55 in 2.0030 seconds in mobile emulation. Paused/exited samples produced no extra viewer frames. This measures render callbacks/texture updates, **not GPU time or a guaranteed display frame rate**.
 
@@ -108,10 +119,9 @@ Known limits:
 
 - Mobile tests use Pixel 7 viewport/touch emulation in Chrome, not a physical phone or Safari.
 - Automated Chrome did not expose native background visibility on this host. Tests simulate the visibility boundary and exercise the real pause listener; native hiding still needs a target-browser manual check.
-- Clipboard success uses an instrumented API; denied access is tested separately. Exports are actual downloaded and decoded PNGs.
+- The local regression suite instruments clipboard success and tests denied access separately. Live HTTPS checks verified the native clipboard with explicitly granted Chrome permissions; browser permission prompts and policies may differ.
 - PNG export needs WebGL2 and float color-buffer support. It uses a fixed assembled studio view and idle boot screen, including during Play.
 - The largest JS chunk is Three.js at about 710 kB minified / 183 kB gzip. The build warning remains visible; there is no physical-phone performance claim.
-- Vercel-hosted behavior and HTTPS-origin clipboard/download permissions remain to be checked after an approved deployment.
 
 ## Credits and licensing
 
