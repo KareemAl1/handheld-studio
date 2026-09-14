@@ -115,6 +115,8 @@ The **2026-09-14 live HTTPS check passed on desktop and Pixel 7 emulation** in C
 
 Measured game texture updates were 56 in 2.0028 seconds on desktop and 55 in 2.0030 seconds in mobile emulation. Paused/exited samples produced no extra viewer frames. This measures render callbacks/texture updates, **not GPU time or a guaranteed display frame rate**.
 
+**User-reported Safari feedback:** Kareem Alwan tested the live site in Safari and said it "looked and worked well." This is overall feedback, without specified browser/device details or individual check results. See the [verification notes](docs/deployment.md#user-reported-safari-feedback).
+
 Known limits:
 
 - Mobile tests use Pixel 7 viewport/touch emulation in Chrome, not a physical phone or Safari.

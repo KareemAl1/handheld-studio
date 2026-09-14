@@ -51,9 +51,15 @@ The exported PNG and desktop/mobile configurator and game captures were visually
 
 The identical mobile export is regenerated locally and ignored rather than committed twice. Earlier milestone screenshots and measurement records remain intact. ESLint and dependency-notice checks also passed after adding the live verifier.
 
+## User-reported Safari feedback
+
+Kareem Alwan reported: "I tested the live site in Safari and it looked and worked well."
+
+This records his overall experience. The Safari version, device, operating system and individual checks were not specified. No individual Safari checks are marked as passed based on this feedback; the recorded Chrome results remain separate.
+
 ## Remaining limits
 
-- Mobile evidence is Chrome viewport/touch emulation, not a physical phone or Safari. The live smoke check is focused; it does not repeat the entire 18-combination regression matrix.
+- Automated mobile evidence is Chrome viewport/touch emulation, not a physical phone or Safari. The live smoke check is focused; it does not repeat the entire 18-combination regression matrix.
 - Reduced motion was enabled for deterministic settled-pixel comparisons. This check does not measure GPU time or frame rate.
 - Live tests exercised pause/resume but did not verify native background-tab visibility. The earlier automated suite simulates the visibility boundary and invokes the actual pause listener; a native target-browser check remains outstanding.
 - Native clipboard success was verified with permissions granted inside isolated Chrome profiles. Denied-access handling was covered locally; other browsers may require a permission prompt or the selectable-link fallback.
