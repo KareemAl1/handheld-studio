@@ -1,0 +1,461 @@
+{
+  "passed": true,
+  "testedAt": "2026-09-14T18:11:21.716Z",
+  "origin": "https://handheld-studio.vercel.app",
+  "limitations": [
+    "Pixel 7 is Chrome mobile emulation, not a physical device.",
+    "Reduced motion is enabled to compare settled model pixels.",
+    "This live smoke test does not simulate hidden-tab boundaries or measure frame rates."
+  ],
+  "contexts": [
+    {
+      "name": "desktop",
+      "passed": true,
+      "browser": "152.0.7977.83",
+      "checks": [
+        "HTTPS document, hashed JavaScript modules, and original GLB return 200; actual model pixels respond to all three shell colors; no development diagnostics or horizontal overflow",
+        "Actual device screen completes start, score 10, game over, restart, keyboard lane changes, pause/resume, and Exit; Play assembles the device",
+        "Save, reload, and explicit Restore preserve shell, finish, and buttons, including rendered pixels",
+        "Version-2 public share link round-trips all choices without overwriting a distinct saved build; duplicate fields and unsupported URL versions safely fall back",
+        "Actual PNG download decodes to opaque 1600×1200 with warm ivory background, visible configured device, and clear 30px edges",
+        "No page errors, console errors, failed network requests, or HTTP errors during the live workflow"
+      ],
+      "imageDifferences": {
+        "Graphite": 0.16241400875547218,
+        "Ember": 0.16229870231394622,
+        "gameScreen": 0.14432627436281859,
+        "reload": 0,
+        "shared": 0
+      },
+      "moduleResponses": [
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-BEybsrG0.js",
+          "status": 200,
+          "contentType": "application/javascript; charset=utf-8"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/react-imMA2LyJ.js",
+          "status": 200,
+          "contentType": "application/javascript; charset=utf-8"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/three-CNUWXp9f.js",
+          "status": 200,
+          "contentType": "application/javascript; charset=utf-8"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-CT9t0hz-.js",
+          "status": 200,
+          "contentType": "application/javascript; charset=utf-8"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/StudioScene-BCqkWoW6.js",
+          "status": 200,
+          "contentType": "application/javascript; charset=utf-8"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/react-imMA2LyJ.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-BEybsrG0.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/StudioScene-BCqkWoW6.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-CT9t0hz-.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/three-CNUWXp9f.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-BEybsrG0.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/react-imMA2LyJ.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/StudioScene-BCqkWoW6.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/three-CNUWXp9f.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-CT9t0hz-.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/react-imMA2LyJ.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-BEybsrG0.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-CT9t0hz-.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/StudioScene-BCqkWoW6.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/three-CNUWXp9f.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-BEybsrG0.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/react-imMA2LyJ.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/three-CNUWXp9f.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-CT9t0hz-.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/StudioScene-BCqkWoW6.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-BEybsrG0.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/react-imMA2LyJ.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/StudioScene-BCqkWoW6.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-CT9t0hz-.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/three-CNUWXp9f.js",
+          "status": 304,
+          "contentType": ""
+        }
+      ],
+      "modelResponses": [
+        {
+          "url": "https://handheld-studio.vercel.app/models/hs-01.glb",
+          "status": 200,
+          "contentType": "model/gltf-binary"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/models/hs-01.glb",
+          "status": 200,
+          "contentType": "model/gltf-binary"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/models/hs-01.glb",
+          "status": 200,
+          "contentType": "model/gltf-binary"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/models/hs-01.glb",
+          "status": 200,
+          "contentType": "model/gltf-binary"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/models/hs-01.glb",
+          "status": 200,
+          "contentType": "model/gltf-binary"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/models/hs-01.glb",
+          "status": 200,
+          "contentType": "model/gltf-binary"
+        }
+      ],
+      "pageErrors": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "httpErrors": [],
+      "clipboardPermissions": "granted",
+      "clipboard": "Native browser clipboard write and read verified with granted permissions; no mock",
+      "shareLink": "https://handheld-studio.vercel.app/?v=2&s=ember&b=ivory&f=translucent",
+      "export": {
+        "width": 1600,
+        "height": 1200,
+        "bytes": 997385,
+        "background": [
+          241,
+          238,
+          231
+        ],
+        "transparentPixels": 0,
+        "edgeChangedPixels": 0,
+        "nonBackgroundFraction": 0.4217197916666667
+      }
+    },
+    {
+      "name": "mobile",
+      "passed": true,
+      "browser": "152.0.7977.83",
+      "checks": [
+        "HTTPS document, hashed JavaScript modules, and original GLB return 200; actual model pixels respond to all three shell colors; no development diagnostics or horizontal overflow",
+        "Actual device screen completes start, score 10, game over, restart, touch lane changes, pause/resume, and Exit; Play assembles the device",
+        "Save, reload, and explicit Restore preserve shell, finish, and buttons, including rendered pixels",
+        "Version-2 public share link round-trips all choices without overwriting a distinct saved build; duplicate fields and unsupported URL versions safely fall back",
+        "Actual PNG download decodes to opaque 1600×1200 with warm ivory background, visible configured device, and clear 30px edges",
+        "No page errors, console errors, failed network requests, or HTTP errors during the live workflow"
+      ],
+      "imageDifferences": {
+        "Graphite": 0.2044925392991649,
+        "Ember": 0.20413434378581954,
+        "gameScreen": 0.21128655682239525,
+        "reload": 0,
+        "shared": 0
+      },
+      "moduleResponses": [
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-BEybsrG0.js",
+          "status": 200,
+          "contentType": "application/javascript; charset=utf-8"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/react-imMA2LyJ.js",
+          "status": 200,
+          "contentType": "application/javascript; charset=utf-8"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-CT9t0hz-.js",
+          "status": 200,
+          "contentType": "application/javascript; charset=utf-8"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/StudioScene-BCqkWoW6.js",
+          "status": 200,
+          "contentType": "application/javascript; charset=utf-8"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/three-CNUWXp9f.js",
+          "status": 200,
+          "contentType": "application/javascript; charset=utf-8"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/react-imMA2LyJ.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-BEybsrG0.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-CT9t0hz-.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/StudioScene-BCqkWoW6.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/three-CNUWXp9f.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/react-imMA2LyJ.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-BEybsrG0.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-CT9t0hz-.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/three-CNUWXp9f.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/StudioScene-BCqkWoW6.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-BEybsrG0.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/react-imMA2LyJ.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-CT9t0hz-.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/StudioScene-BCqkWoW6.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/three-CNUWXp9f.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/react-imMA2LyJ.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-BEybsrG0.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-CT9t0hz-.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/three-CNUWXp9f.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/StudioScene-BCqkWoW6.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/react-imMA2LyJ.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-BEybsrG0.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/three-CNUWXp9f.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/StudioScene-BCqkWoW6.js",
+          "status": 304,
+          "contentType": ""
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/assets/index-CT9t0hz-.js",
+          "status": 304,
+          "contentType": ""
+        }
+      ],
+      "modelResponses": [
+        {
+          "url": "https://handheld-studio.vercel.app/models/hs-01.glb",
+          "status": 200,
+          "contentType": "model/gltf-binary"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/models/hs-01.glb",
+          "status": 200,
+          "contentType": "model/gltf-binary"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/models/hs-01.glb",
+          "status": 200,
+          "contentType": "model/gltf-binary"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/models/hs-01.glb",
+          "status": 200,
+          "contentType": "model/gltf-binary"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/models/hs-01.glb",
+          "status": 200,
+          "contentType": "model/gltf-binary"
+        },
+        {
+          "url": "https://handheld-studio.vercel.app/models/hs-01.glb",
+          "status": 200,
+          "contentType": "model/gltf-binary"
+        }
+      ],
+      "pageErrors": [],
+      "consoleErrors": [],
+      "failedRequests": [],
+      "httpErrors": [],
+      "clipboardPermissions": "granted",
+      "clipboard": "Native browser clipboard write and read verified with granted permissions; no mock",
+      "shareLink": "https://handheld-studio.vercel.app/?v=2&s=ember&b=ivory&f=translucent",
+      "export": {
+        "width": 1600,
+        "height": 1200,
+        "bytes": 997385,
+        "background": [
+          241,
+          238,
+          231
+        ],
+        "transparentPixels": 0,
+        "edgeChangedPixels": 0,
+        "nonBackgroundFraction": 0.4217197916666667
+      }
+    }
+  ],
+  "elapsedMs": 39660
+}
