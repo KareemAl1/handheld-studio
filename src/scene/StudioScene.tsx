@@ -1,4 +1,4 @@
-import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { Canvas, addAfterEffect, useThree } from '@react-three/fiber';
 import { ContactShadows, Environment, Html, Lightformer } from '@react-three/drei';
 import { ACESFilmicToneMapping } from 'three';
@@ -8,6 +8,8 @@ import type { ViewRequest } from './CameraControls';
 import type { Configuration } from '../config/config';
 import { SceneFallback } from '../components/SceneBoundary';
 import type { GameSession } from '../game/session';
+import { ExportBridge } from './ExportBridge';
+import type { ExportImage } from './ExportBridge';
 
 function availableWebGL() {
   try {
@@ -49,7 +51,7 @@ function Diagnostics() {
     window.__HS_STUDIO__ = {
       snapshot: () => ({
         frames, calls: gl.info.render.calls, triangles: gl.info.render.triangles,
-        geometries: gl.info.memory.geometries, textures: gl.info.memory.textures,
+        geometries: gl.info.memory.geometries, textures: gl.info.memory.textures, programs: gl.info.programs?.length ?? 0,
         camera: camera.position.toArray(), zoom: camera.userData.studio, materials: scene.getObjectByName('Handheld')?.userData.materials, assembly: scene.getObjectByName('Handheld')?.userData.assembly, game: scene.getObjectByName('Handheld')?.userData.game, dpr: gl.getPixelRatio(),
         renderer: gl.getContext().getParameter(gl.getContext().RENDERER) as string,
       }),
@@ -62,8 +64,8 @@ function Diagnostics() {
   return null;
 }
 
-export default function StudioScene({ config, view, assembly, onReady, onOrbit, playing, game, onPlayReady }: {
-  config: Configuration; view: ViewRequest; assembly: number; onReady: () => void; onOrbit: () => void; playing: boolean; game: GameSession; onPlayReady: () => void;
+function StudioScene({ config, view, assembly, onReady, onOrbit, playing, game, onPlayReady, onExportReady }: {
+  config: Configuration; view: ViewRequest; assembly: number; onReady: () => void; onOrbit: () => void; playing: boolean; game: GameSession; onPlayReady: () => void; onExportReady: (exporter: ExportImage | null) => void;
 }) {
   const [supported] = useState(availableWebGL);
   const [loaded, setLoaded] = useState(false);
@@ -89,6 +91,10 @@ export default function StudioScene({ config, view, assembly, onReady, onOrbit, 
     </Suspense>
     <CameraControls view={view} progress={progress} loaded={loaded} onOrbit={onOrbit} locked={playing} onPlayReady={onPlayReady} />
     <ContextRecovery onRestore={refreshShadow} game={game} />
+    <ExportBridge loaded={loaded} onReady={onExportReady} />
     {import.meta.env.DEV && <Diagnostics />}
   </Canvas>;
 }
+
+// Score/lane HUD changes do not need to recapture the studio lighting.
+export default memo(StudioScene);

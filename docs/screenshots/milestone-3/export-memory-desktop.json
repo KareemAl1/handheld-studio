@@ -1,0 +1,13 @@
+{
+  "before": {
+    "geometries": 50,
+    "textures": 8,
+    "programs": 14
+  },
+  "after": {
+    "geometries": 50,
+    "textures": 8,
+    "programs": 14
+  },
+  "additionalExports": 3
+}

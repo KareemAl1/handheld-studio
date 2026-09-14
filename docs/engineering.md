@@ -2,9 +2,11 @@
 
 ## React owns configuration; Three owns presentation
 
-`src/config/config.ts` is a pure TypeScript module. Schema v2 accepts only known shell colors, button colors and finishes. The reducer never mutates previous state, and invalid restoration leaves the current valid build intact. Serialization is deterministic (`v=2&s=chalk&b=charcoal&f=solid`), with input bounds and rejection of duplicate, missing or extra keys. Strict v1 values migrate to default buttons and solid finish. Local persistence and URL loading are not wired yet.
+`src/config/config.ts` is a pure TypeScript module. Schema v2 accepts only known shell colors, button colors and finishes. The reducer never mutates previous state, and invalid restoration leaves the current valid build intact. Serialization is deterministic (`v=2&s=chalk&b=charcoal&f=solid`), with input bounds and rejection of duplicate, missing or extra keys. Strict v1 values migrate to default buttons and solid finish.
 
-Camera state is separate from product configuration: moving the camera does not change what a future saved build means. Native radio inputs provide keyboard arrow-key behavior, checked state, and accessible labels without recreating those semantics in a canvas.
+Camera state is separate from product configuration: moving the camera does not change what a saved build means. Native radio inputs provide keyboard arrow-key behavior, checked state, and accessible labels without recreating those semantics in a canvas.
+
+`persistence.ts` validates both stored JSON and URL input. A valid shared query takes precedence over localStorage without reading or changing it. Otherwise a validated saved build wins, then defaults. Storage getters, JSON parsing and writes can all fail independently; each boundary has a user-facing result. Explicit Save/Restore clears an older shared query so the next reload honors that action. Clipboard denial exposes a selected readonly link. Saving is explicit and stores one configuration, without camera or game state.
 
 ## Original, editable geometry
 
@@ -14,13 +16,15 @@ The shell represents 164 × 88 × 19 mm. It exports at 6.4 units wide with X as 
 
 ## Resource ownership
 
-The GLTF loader caches original geometry. Each console owns its scene and material copies, procedural screen/grain textures and derived geometry; shared imported geometry stays cached. Cleanup disposes only owned resources. `Screen` stays a separate UV-mapped material, ready for a later game texture.
+The GLTF loader caches original geometry. Each console owns its scene and material copies, procedural screen/grain textures and derived geometry; shared imported geometry stays cached. Cleanup disposes only owned resources. `Screen` stays a separate UV-mapped material: Play temporarily binds an owned canvas texture and restores the original boot texture on exit.
 
 At load time, compatible static meshes sharing a material and visibility policy are combined within each assembly group. This reduces assembled draw calls from 92 to 26 without flattening the five movable layers or changing the editable Blender source. Transform baking preserves world-space shape, normals and UVs; conditional internals remain separate from visible port details. Tests load the real exported GLB and check bounds, triangles, transforms, independent visibility and disposal without mutating cached source buffers.
 
 ## Rendering at rest
 
 The canvas renders on demand until camera, material and assembly transitions settle. Static environment lighting is generated locally once; no remote HDRI or texture service is required. Contact shadows refresh when an assembly transition settles and are cached during ordinary orbit. This avoids repeatedly rendering the device into a shadow map while only the camera moves.
+
+The scene component is memoized so score/lane changes in the HTML HUD do not recapture environment lighting. Game texture updates explicitly invalidate the demand loop; ready, paused and finished games stop publishing frames.
 
 Pixel ratio is capped at 1.75. Visible internals are disabled for solid shells. Heavy Three/R3F code loads separately from the React control interface. The Three chunk still exceeds Vite's generic 500 kB warning threshold; it remains an explicit measured cost, not a suppressed warning. A geometry/texture decoder is deferred until it produces a measured transfer or runtime benefit over this small self-contained model.
 
@@ -43,6 +47,20 @@ An unavailable WebGL2 context gets a labeled static Chalk poster while the HTML 
 After a temporary WebGL context loss, Three rebuilds its GPU resources. The studio explicitly invalidates its demand loop and recaptures the environment and contact shadow on restoration. This preserves configuration, assembly and camera state. A regression test forces two loss/restore cycles and compares the restored canvas pixels to the original lit scene.
 
 The optional, feature-detected WebMCP shell action uses the same reducer and validates its input. Unsupported browsers do not need it. Its valid and invalid paths were exercised through the actual in-app browser tool registry.
+
+## A game that is separate from its screen
+
+`game/engine.ts` is a deterministic pure reducer for a seeded three-lane collect-and-dodge game. `GameSession` owns a fixed 1/60-second accumulator and separate subscriptions for canvas painting and the small React HUD. A bounded elapsed step avoids jumping through hazards after a stalled frame. The animation hook schedules simulation/texture updates at most 30 times per second; input and phase changes repaint immediately. This is a budget on scheduled updates, not a measured GPU frame-rate promise.
+
+Entering Play assembles the device and moves to a screen-specific camera fit. Start is enabled only after assembly and camera settle. Camera listeners ignore play input, while HTML buttons and keyboard shortcuts feed the same game actions. Visibility loss and WebGL context loss pause the session. Returning to the tab requires Resume and starts a fresh animation clock. Reduced motion removes decorative lane scrolling while preserving movement needed to play.
+
+## Export without disturbing inspection
+
+PNG export clones the assembled model and its materials into a separate scene, retaining source-owned geometry and lighting textures. It applies the exact selected configuration, restores the boot display, and creates a bounded 1600 × 1200 render target using the existing renderer. It does not resize the live canvas, move the interactive camera, or alter a game session.
+
+Three r180 offscreen targets omit the main canvas's display transform. Export therefore captures linear half-float color, unpremultiplies edge/shadow coverage, applies ACES tone mapping and sRGB conversion, and composites onto exact ivory `#f1eee7`. The isolated transmission pass gets an opaque ivory backdrop so tinted shells retain convincing internals. Pixel tests guard background color, opacity, framing, configuration differences and repeatability.
+
+GPU work and renderer-state restoration finish synchronously before asynchronous PNG encoding. A `finally` block releases export-owned textures, materials, geometry and render targets, including Three's private per-scene transmission target. The export requires a supported float color buffer; a failure produces an actionable message. The browser receives a Blob URL download with a persistent fallback link; replaced URLs are revoked.
 
 ## What performance numbers mean
 

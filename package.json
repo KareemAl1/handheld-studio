@@ -13,8 +13,10 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "test:production": "node scripts/verify_production.mjs",
+    "test:production": "node scripts/verify-milestone3.mjs",
+    "test:production:milestone2": "node scripts/verify_production.mjs",
     "test:performance": "node scripts/profile-studio.mjs",
+    "test:performance:game": "node scripts/profile-game.mjs",
     "asset:build": "python scripts/run_blender.py build",
     "asset:export": "python scripts/run_blender.py export"
   },

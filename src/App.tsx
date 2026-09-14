@@ -11,6 +11,7 @@ import { useGameLoop } from './game/useGameLoop';
 import { GamePanel } from './components/GamePanel';
 import { getInitialBuild } from './config/persistence';
 import { BuildActions } from './components/BuildActions';
+import type { ExportImage } from './scene/ExportBridge';
 
 const StudioScene = lazy(() => import('./scene/StudioScene').catch((cause: unknown) => {
   const error = new Error('The 3D viewer module could not load.', { cause });
@@ -36,6 +37,8 @@ export default function App() {
   const [playing, setPlaying] = useState(false);
   const [playReady, setPlayReady] = useState(false);
   const gameSummary = useGameLoop(game, playing);
+  const [exporter, setExporter] = useState<ExportImage | null>(null);
+  const onExportReady = useCallback((handler: ExportImage | null) => setExporter(() => handler), []);
   const selectShell = useCallback((shell: ShellColor) => dispatch({ type: 'select-shell', shell }), []);
   const chooseView = useCallback((name: ViewName) => {
     setDetail(null);
@@ -71,8 +74,14 @@ export default function App() {
   const enterPlay = () => {
     game.reset(); setPlaying(true); setPlayReady(false); setAssembly(0); setDetail(null); setActiveView(null); zoom('play');
     document.querySelector('canvas')?.focus({preventScroll:true});
-    document.querySelector('.viewer')?.scrollIntoView({block:'start',behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
   };
+  useEffect(() => {
+    // Run after the play layout is committed. Starting/resuming from a button
+    // below the fold must bring the entire screen back into view.
+    if (playing && (gameSummary.phase === 'ready' || gameSummary.phase === 'running')) {
+      document.querySelector('.viewer')?.scrollIntoView({ block: 'start', behavior: 'instant' });
+    }
+  }, [playing, gameSummary.phase]);
   useEffect(() => {
     if (!playing) return;
     const key = (event: KeyboardEvent) => {
@@ -137,7 +146,7 @@ export default function App() {
           <div className="scene-wrap" data-testid="device-viewer" data-ready={ready}>
             <SceneBoundary key={attempt} onRetry={retry}>
               <Suspense fallback={<div className="loading-state" role="status"><span className="loading-orbit" />Preparing your handheld…</div>}>
-                <StudioScene config={config} view={view} assembly={assembly} onReady={onReady} onOrbit={onOrbit} playing={playing} game={game} onPlayReady={onPlayReady} />
+                <StudioScene config={config} view={view} assembly={assembly} onReady={onReady} onOrbit={onOrbit} playing={playing} game={game} onPlayReady={onPlayReady} onExportReady={onExportReady} />
               </Suspense>
             </SceneBoundary>
           </div>
@@ -162,7 +171,7 @@ export default function App() {
         <div id="customize"><Configurator config={config} onShell={selectShell} onButtons={(buttons) => dispatch({ type: 'select-buttons', buttons })} onFinish={(finish) => dispatch({ type: 'select-finish', finish })} onReset={resetBuild} /></div>
       </div>
       <div className="workbench-caption"><span><span className="caption-symbol" aria-hidden="true">↳</span> Designed to be held. Made to be personal.</span><span>ORIGINAL HARDWARE CONCEPT / HS–01</span></div>
-      <BuildActions config={config} initialMessage={initialBuild.message} onRestore={value => dispatch({type:'restore',value})} />
+      <BuildActions config={config} initialMessage={initialBuild.message} onRestore={value => dispatch({type:'restore',value})} exporter={exporter} />
       {!playing && <DetailViews selected={detail} onSelect={selectDetail} />}
     </main>
     <footer className="site-footer"><span>An independent study by <strong>Kareem Alwan</strong></span><span className="footer-wordmark">GOOD THINGS. SMALL FORM.</span></footer>

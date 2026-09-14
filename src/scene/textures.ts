@@ -1,5 +1,5 @@
 import { CanvasTexture, RepeatWrapping, SRGBColorSpace } from 'three';
-// An original boot display, kept as a replaceable material for the later tiny game.
+// Original idle display, restored after Play and used in product-image exports.
 export function makeScreenTexture() {
   const canvas = document.createElement('canvas');
   canvas.width = 1024; canvas.height = 640;

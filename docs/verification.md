@@ -1,6 +1,6 @@
 # First milestone verification
 
-This is the historical first-milestone report. See [milestone-2.md](milestone-2.md) for the current camera, material, assembly and performance results.
+This is the historical first-milestone report. See [milestone-3.md](milestone-3.md) for current game, persistence, sharing, export and regression results, and [milestone-2.md](milestone-2.md) for camera, material and assembly measurements.
 
 Verified locally on **2026-09-10**. No remote repository, push, deployment, or authenticated GitHub action was performed during implementation. The preview is served on `http://127.0.0.1:5173/` while its local development process is running.
 

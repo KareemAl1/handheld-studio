@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "testedAt": "2026-09-14T17:02:34.398Z",
+  "browser": "152.0.7977.83",
+  "reducedMotion": true,
+  "checks": [
+    "built production modules and original model load without development diagnostics",
+    "Play assembles the device; real screen runs start, collection, game over, restart, and Exit",
+    "save and full reload restore shell, material, and button choices in both controls and rendered pixels",
+    "copied version-2 URL restores all three choices and takes precedence without overwriting the distinct saved build",
+    "download event yields a decoded, opaque, nonblank 1600×1200 PNG with the correct configuration filename",
+    "no page errors, console errors, failed requests, or HTTP responses at or above 400"
+  ],
+  "imageDifferences": {
+    "gameScreen": 0.14432627436281859,
+    "configuredDevice": 0.1804135397123202,
+    "reloadedDevice": 0,
+    "sharedDevice": 0
+  },
+  "pageErrors": [],
+  "consoleErrors": [],
+  "failedRequests": [],
+  "httpErrors": [],
+  "shareLink": "http://127.0.0.1:4173/?v=2&s=ember&b=ivory&f=translucent",
+  "export": {
+    "width": 1600,
+    "height": 1200,
+    "bytes": 997385,
+    "transparentPixels": 0,
+    "nonBackgroundFraction": 0.4217197916666667
+  },
+  "elapsedMs": 12039
+}

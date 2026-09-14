@@ -1,0 +1,156 @@
+{
+  "passed": true,
+  "testedAt": "2026-09-14T17:03:40.782Z",
+  "url": "http://127.0.0.1:5173/",
+  "note": "Installed Chrome headless on this Windows host. Pixel 7 uses viewport and touch emulation, not physical-phone hardware. Texture updates count CanvasTexture version increments from game redraws; viewer frames count the existing render callbacks. These measurements are not GPU execution time or guaranteed display frame rate. Run without other browser benchmarks for comparison.",
+  "contexts": {
+    "desktop": {
+      "passed": true,
+      "testedAt": "2026-09-14T17:03:40.782Z",
+      "pageErrors": [],
+      "consoleErrors": [],
+      "browser": "152.0.7977.83",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "renderer": "WebKit WebGL",
+      "resources": {
+        "beforePlay": {
+          "calls": 26,
+          "triangles": 54785,
+          "geometries": 44,
+          "textures": 7,
+          "programs": 11,
+          "dpr": 1
+        },
+        "playReady": {
+          "calls": 26,
+          "triangles": 54785,
+          "geometries": 44,
+          "textures": 8,
+          "programs": 11,
+          "dpr": 1
+        },
+        "running": {
+          "calls": 26,
+          "triangles": 54785,
+          "geometries": 44,
+          "textures": 8,
+          "programs": 11,
+          "dpr": 1
+        },
+        "afterExit": {
+          "calls": 26,
+          "triangles": 54785,
+          "geometries": 44,
+          "textures": 7,
+          "programs": 11,
+          "dpr": 1
+        },
+        "exitDeltas": {
+          "geometries": 0,
+          "textures": 0,
+          "programs": 0
+        }
+      },
+      "running": {
+        "requestedWallMs": 2000,
+        "actualWallMs": 2002.800000000745,
+        "simulationStartSeconds": 0,
+        "simulationEndSeconds": 2.0166666666666644,
+        "simulationAdvancedSeconds": 2.0166666666666644,
+        "textureUpdates": 56,
+        "viewerFrames": 56,
+        "scoreAtEnd": 10
+      },
+      "paused": {
+        "requestedWallMs": 1000,
+        "actualWallMs": 1000.3000000007451,
+        "viewerFrames": 0,
+        "textureUpdates": 0,
+        "simulationAdvancedSeconds": 0
+      },
+      "exited": {
+        "requestedWallMs": 1000,
+        "actualWallMs": 1011.5,
+        "viewerFrames": 0
+      },
+      "elapsedMs": 10856
+    },
+    "mobile": {
+      "passed": true,
+      "testedAt": "2026-09-14T17:03:51.638Z",
+      "pageErrors": [],
+      "consoleErrors": [],
+      "browser": "152.0.7977.83",
+      "viewport": {
+        "width": 412,
+        "height": 839
+      },
+      "renderer": "WebKit WebGL",
+      "resources": {
+        "beforePlay": {
+          "calls": 26,
+          "triangles": 54785,
+          "geometries": 44,
+          "textures": 7,
+          "programs": 11,
+          "dpr": 1.75
+        },
+        "playReady": {
+          "calls": 25,
+          "triangles": 54405,
+          "geometries": 44,
+          "textures": 8,
+          "programs": 11,
+          "dpr": 1.75
+        },
+        "running": {
+          "calls": 25,
+          "triangles": 54405,
+          "geometries": 44,
+          "textures": 8,
+          "programs": 11,
+          "dpr": 1.75
+        },
+        "afterExit": {
+          "calls": 26,
+          "triangles": 54785,
+          "geometries": 44,
+          "textures": 7,
+          "programs": 11,
+          "dpr": 1.75
+        },
+        "exitDeltas": {
+          "geometries": 0,
+          "textures": 0,
+          "programs": 0
+        }
+      },
+      "running": {
+        "requestedWallMs": 2000,
+        "actualWallMs": 2003,
+        "simulationStartSeconds": 0,
+        "simulationEndSeconds": 1.9999999999999978,
+        "simulationAdvancedSeconds": 1.9999999999999978,
+        "textureUpdates": 55,
+        "viewerFrames": 55,
+        "scoreAtEnd": 10
+      },
+      "paused": {
+        "requestedWallMs": 1000,
+        "actualWallMs": 1015.3000000007451,
+        "viewerFrames": 0,
+        "textureUpdates": 0,
+        "simulationAdvancedSeconds": 0
+      },
+      "exited": {
+        "requestedWallMs": 1000,
+        "actualWallMs": 1012.3000000007451,
+        "viewerFrames": 0
+      },
+      "elapsedMs": 10889
+    }
+  }
+}

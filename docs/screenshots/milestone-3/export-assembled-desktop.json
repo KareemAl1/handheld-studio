@@ -1,0 +1,17 @@
+{
+  "width": 1600,
+  "height": 1200,
+  "background": [
+    241,
+    238,
+    231
+  ],
+  "opaque": true,
+  "coverage": 0.4055901041666667,
+  "bounds": {
+    "left": 264,
+    "right": 1452,
+    "top": 226,
+    "bottom": 1030
+  }
+}

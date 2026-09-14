@@ -4,7 +4,7 @@ HS–01 is an original landscape handheld, presented as an object on a warm indu
 
 The initial palette is Chalk, Graphite, and Ember. Chalk is the default, with orange reserved for the power key, screen accent, and small interface details. The interface uses a neutral sans serif with restrained monospace labels. The customization controls appear beside the product on desktop and below it on small screens.
 
-Camera movement follows explicit user actions. Nothing rotates unattended. The front and back views give dependable inspection angles, while Studio restores the composed three-quarter view. Touch dragging rotates the device; normal page scrolling remains available outside the canvas. Wheel zoom is disabled so scrolling does not unexpectedly zoom the model.
+After a restrained opening move, camera movement follows explicit user actions. The front and back views give dependable inspection angles, while Studio restores the composed three-quarter view. Touch dragging rotates the device; wheel and pinch zoom apply only over the viewer. Normal page scrolling remains available outside it. Reduced motion skips the opening move and transitions.
 
 ## First milestone scope
 
@@ -13,7 +13,9 @@ Camera movement follows explicit user actions. Nothing rotates unattended. The f
 - Responsive and reduced-motion behavior, loading/retry handling, and a static WebGL fallback.
 - Editable source, reproducible GLB export, configuration tests, and browser verification.
 
-The display is an original static boot graphic. It is not yet a game. Translucent materials, button/finish customization, exploded animation, the tiny game, saved builds, URL sharing, and image export remain later milestones.
+This scope records the initial milestone. [Milestone 2](milestone-2.md) added independent buttons, tinted plastic, detailed internals and exploded inspection. [Milestone 3](milestone-3.md) adds Signal Run, saved builds, URL sharing and product images.
+
+The game extends the same charcoal, ivory and orange palette onto the physical screen. Entering Play gives the screen enough room to read and places large native controls directly beneath it. The compact “Keep this one” section holds save, restore, share and export actions without crowding the configurator. Exported images omit the website controls and retain the warm studio setting.
 
 ## Refinements made from browser evidence
 

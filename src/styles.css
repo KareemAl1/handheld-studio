@@ -1026,7 +1026,7 @@ button:disabled { cursor: not-allowed; opacity: .45; transform: none; }
 .play-launch button span,.exit-play span { margin-left:14px; }
 .workbench.is-playing { grid-template-columns:1fr; }
 .is-playing #customize { display:none; }
-.is-playing .scene-wrap { height:480px; min-height:300px; flex:0 0 auto; }
+.is-playing .scene-wrap { height:clamp(180px, calc(100svh - 22rem), 480px); min-height:180px; flex:0 0 auto; }
 .game-panel { width:100%; max-width:800px; padding:22px 28px 28px; margin:0 auto; }
 .game-heading,.game-scoreline { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
 .game-heading h2 { margin:8px 0 0; font-size:2rem; font-weight:400; letter-spacing:-1px; }
@@ -1035,7 +1035,7 @@ button:disabled { cursor: not-allowed; opacity: .45; transform: none; }
 .game-scoreline strong { font:1.3rem Consolas,monospace; color:#29352d; margin-left:8px; }
 .game-controls { display:grid; grid-template-columns:70px minmax(0,1fr) 70px; gap:12px; max-width:460px; margin:0 auto; }
 .game-controls button { min-height:58px; border:1px solid #a7afa0; border-radius:8px; font-size:1rem; touch-action:manipulation; }
-.game-controls .game-direction { font-size:1.6rem; background:#e5e7dc; }
+.game-controls .game-direction { padding:0; font-size:1.6rem; background:#e5e7dc; }
 .game-controls .game-action { color:#f9f7ed; background:#344137; border-color:#344137; }
 .game-controls button:not(:disabled):hover { box-shadow:0 3px 9px #26302818; }
 .game-instructions { text-align:center; font-size:.875rem; line-height:1.7; color:#626c59; margin:20px 0 0; }
@@ -1045,7 +1045,7 @@ button:disabled { cursor: not-allowed; opacity: .45; transform: none; }
 .build-actions-heading h2 span { color:var(--orange); }
 .build-actions-heading p { font-size:.9375rem; color:#626c59; margin:0; }
 .build-action-buttons { display:flex; flex-wrap:wrap; gap:10px; }
-.build-action-buttons button { display:flex; align-items:center; justify-content:space-between; gap:28px; min-height:48px; padding:12px 18px; min-width:170px; border:1px solid #c8ccbf; border-radius:6px; background:#f8f7f1; font-size:.9375rem; }
+.build-action-buttons button { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:6px 28px; min-height:48px; padding:12px 18px; min-width:170px; border:1px solid #c8ccbf; border-radius:6px; background:#f8f7f1; font-size:.9375rem; }
 .build-action-buttons button span { color:var(--orange); }
 .build-action-buttons button:hover { background:#ecebe2; }
 .build-feedback { font-size:.9375rem; line-height:1.6; margin:18px 0 8px; color:#43513f; min-height:1.6em; }
@@ -1053,10 +1053,11 @@ button:disabled { cursor: not-allowed; opacity: .45; transform: none; }
 .share-link { display:block; max-width:800px; font-size:.875rem; margin:14px 0; }
 .share-link input { display:block; margin-top:8px; width:100%; min-height:46px; border:1px solid #9aa18d; border-radius:5px; padding:12px; background:#faf9f3; color:var(--ink); font: .875rem Consolas,monospace; }
 .share-link input:focus-visible { outline:2px solid var(--orange); outline-offset:3px; }
+.download-png { display:inline-flex; align-items:center; min-height:44px; margin-bottom:8px; color:#a43c21; text-underline-offset:4px; font-size:.9375rem; }
 @media(max-width:600px) {
   .play-launch { margin:0 18px 20px; }
   .play-launch button { width:100%; }
-  .is-playing .scene-wrap { height:265px; min-height:265px; }
+  .is-playing .scene-wrap { height:clamp(160px, calc(100svh - 22rem), 265px); min-height:160px; }
   .game-panel { padding:20px 18px 24px; }
   .game-heading h2 { font-size:1.75rem; }
   .exit-play { padding:10px 12px; }

@@ -72,3 +72,26 @@ test('game: keyboard and touch lanes, pause/resume and reduced-motion framing',a
   await page.getByRole('button',{name:'Exit Play',exact:true}).click();
   await idle(page);
 });
+
+test('game: visibility loss pauses without background ticks or automatic resume',async({page})=>{
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await enter(page); await page.getByRole('button',{name:'Start game',exact:true}).click();
+  await expect.poll(()=>page.evaluate(()=>window.__HS_STUDIO__!.snapshot().game!.elapsed)).toBeGreaterThan(.2);
+  // Automated Chrome reports even background targets as visible on this host.
+  // Simulate the browser visibility boundary, then exercise the actual listener.
+  await page.evaluate(()=>{
+    Object.defineProperty(document,'hidden',{configurable:true,get:()=>true});
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await expect(page.locator('.game-panel')).toHaveAttribute('data-phase','paused');
+  await idle(page);
+  const before=await page.evaluate(()=>window.__HS_STUDIO__!.snapshot().game!.elapsed);
+  await page.waitForTimeout(1100);
+  expect(await page.evaluate(()=>window.__HS_STUDIO__!.snapshot().game!.elapsed)).toBe(before);
+  await page.evaluate(()=>{ Reflect.deleteProperty(document,'hidden'); document.dispatchEvent(new Event('visibilitychange')); });
+  await expect(page.locator('.game-panel')).toHaveAttribute('data-phase','paused');
+  await page.getByRole('button',{name:'Resume game',exact:true}).click();
+  await expect.poll(()=>page.evaluate(()=>window.__HS_STUDIO__!.snapshot().game!.elapsed)).toBeGreaterThan(before);
+  expect(await page.evaluate(()=>window.__HS_STUDIO__!.snapshot().game!.elapsed)).toBeLessThan(before+.5);
+  await page.getByRole('button',{name:'Exit Play',exact:true}).click(); await idle(page);
+});
