@@ -1,0 +1,34 @@
+{
+  "testedAt": "2026-09-29T15:27:19.397Z",
+  "url": "http://127.0.0.1:5173/",
+  "viewports": [
+    {
+      "width": 320,
+      "height": 1000,
+      "errors": [],
+      "checkedControls": 27,
+      "metrics": {
+        "scale": 1,
+        "width": 320,
+        "pageWidth": 320,
+        "rootFontSize": "16px"
+      },
+      "passed": true
+    },
+    {
+      "width": 768,
+      "height": 1000,
+      "errors": [],
+      "checkedControls": 27,
+      "metrics": {
+        "scale": 1,
+        "width": 768,
+        "pageWidth": 768,
+        "rootFontSize": "16px"
+      },
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "browser": "154.0.8037.58"
+}

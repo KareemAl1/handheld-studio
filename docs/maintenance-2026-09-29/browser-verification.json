@@ -1,0 +1,80 @@
+{
+  "testedAt": "2026-09-29T15:21:31.637Z",
+  "url": "http://127.0.0.1:5173/",
+  "browser": "154.0.8037.58",
+  "contexts": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "mobileEmulation": false,
+      "errors": [],
+      "failedRequests": [],
+      "httpErrors": [],
+      "checks": [
+        "Fresh Chrome context at 100% page scale, readable responsive layout, no horizontal page overflow",
+        "Graphite/Ivory/translucent material state, Back/Front camera, Zoom in/Fit, Explode/Assemble",
+        "Mouse drag changes the inspection camera",
+        "Play locks camera drag/wheel, Enter starts, actual screen score reaches 10, movement and Pause work",
+        "Real 1600×1200 opaque PNG download, ivory background, fallback link; paused game and live camera preserved",
+        "Resume advances from paused time; Escape returns focus to Play; Reset restores default configuration"
+      ],
+      "zoom": {
+        "scale": 1,
+        "innerWidth": 1440,
+        "pageWidth": 1440,
+        "dpr": 1
+      },
+      "export": {
+        "filename": "hs-01-graphite-translucent-ivory.png",
+        "width": 1600,
+        "height": 1200,
+        "opaque": true,
+        "background": [
+          241,
+          238,
+          231
+        ]
+      },
+      "passed": true
+    },
+    "phone": {
+      "viewport": {
+        "width": 412,
+        "height": 839
+      },
+      "mobileEmulation": true,
+      "errors": [],
+      "failedRequests": [],
+      "httpErrors": [],
+      "checks": [
+        "Fresh Chrome context at 100% page scale, readable responsive layout, no horizontal page overflow",
+        "Graphite/Ivory/translucent material state, Back/Front camera, Zoom in/Fit, Explode/Assemble",
+        "Emulated touch drag changes the inspection camera",
+        "Play locks camera drag/wheel, Enter starts, actual screen score reaches 10, movement and Pause work",
+        "Real 1600×1200 opaque PNG download, ivory background, fallback link; paused game and live camera preserved",
+        "Resume advances from paused time; Escape returns focus to Play; Reset restores default configuration"
+      ],
+      "zoom": {
+        "scale": 1,
+        "innerWidth": 412,
+        "pageWidth": 412,
+        "dpr": 1
+      },
+      "export": {
+        "filename": "hs-01-graphite-translucent-ivory.png",
+        "width": 1600,
+        "height": 1200,
+        "opaque": true,
+        "background": [
+          241,
+          238,
+          231
+        ]
+      },
+      "passed": true
+    }
+  },
+  "passed": true
+}

@@ -89,6 +89,8 @@ The editable source (817 KB), authoring/export scripts and runtime model (1.80 M
 
 ## Verification and limits
 
+The [2026-09-29 local maintenance review](docs/maintenance-2026-09-29/README.md) adds fresh Chrome desktop, phone, tablet and 320px screenshots, 12 focused browser passes, and another passing 162-test unit run. Camera/game input, hidden-tab simulation, save/share, PNG export and failure recovery remained sound; no source changes were needed. The report includes a concise interview recap and a bounded follow-up list.
+
 ```sh
 npm run lint
 npm test

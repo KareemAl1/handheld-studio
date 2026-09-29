@@ -1,0 +1,33 @@
+{
+  "measuredAt": "2026-09-29T15:22:03.101Z",
+  "note": "Fresh local production build. Gzip bytes are local compression measurements, not measured HTTP transfer.",
+  "files": [
+    {
+      "name": "index-BEybsrG0.js",
+      "minifiedBytes": 28827,
+      "gzipBytes": 10143
+    },
+    {
+      "name": "index-CT9t0hz-.js",
+      "minifiedBytes": 309505,
+      "gzipBytes": 98613
+    },
+    {
+      "name": "react-imMA2LyJ.js",
+      "minifiedBytes": 192560,
+      "gzipBytes": 60375
+    },
+    {
+      "name": "StudioScene-BCqkWoW6.js",
+      "minifiedBytes": 31912,
+      "gzipBytes": 12464
+    },
+    {
+      "name": "three-CNUWXp9f.js",
+      "minifiedBytes": 709793,
+      "gzipBytes": 183025
+    }
+  ],
+  "totalMinifiedBytes": 1272597,
+  "totalGzipBytes": 364620
+}
