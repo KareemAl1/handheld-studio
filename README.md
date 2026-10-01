@@ -1,6 +1,6 @@
 # Handheld Studio
 
-An original 3D handheld configurator by [Kareem Alwan](https://github.com/KareemAl1), built with React, TypeScript, Vite and React Three Fiber. HS–01 brings tactile product design, inspectable hardware and a small playable game to a warm industrial-design workbench.
+An original 3D handheld configurator and personal frontend project by [Kareem Alwan](https://github.com/KareemAl1), built with React, TypeScript, Vite and React Three Fiber. HS–01 brings tactile product design, inspectable hardware and a small playable game to a warm industrial-design workbench.
 
 **[Open the live studio](https://handheld-studio.vercel.app)** · [GitHub repository](https://github.com/KareemAl1/handheld-studio)
 
@@ -88,6 +88,8 @@ npm run asset:export
 The editable source (817 KB), authoring/export scripts and runtime model (1.80 MB) stay in Git. Authoring sources and documentation are not served in the website build. No Blender installation is needed on Vercel.
 
 ## Verification and limits
+
+The **2026-10-01 documentation review** reran the existing production build (including dependency notices and TypeScript), ESLint, and unit suite under Node 22.12.0: **162 tests passed across seven files**. The existing Three.js chunk warning remains. A focused in-app-browser check also loaded the existing public deployment, verified the 3D asset and Ember shell selection, and found no console errors. No full browser suite rerun, physical-device test, or new deployment was performed; the broader browser evidence below retains its original dates.
 
 The [2026-09-29 local maintenance review](docs/maintenance-2026-09-29/README.md) adds fresh Chrome desktop, phone, tablet and 320px screenshots, 12 focused browser passes, and another passing 162-test unit run. Camera/game input, hidden-tab simulation, save/share, PNG export and failure recovery remained sound; no source changes were needed. The report includes a concise interview recap and a bounded follow-up list.
 
