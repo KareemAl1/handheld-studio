@@ -124,7 +124,7 @@ export default function App() {
     return () => lifecycle.abort();
   }, [selectShell]);
 
-  return <div className="studio-app">
+  return <div className="studio-app" data-shell={config.shell}>
     <a className="skip-link" href="#customize">Skip to customization</a>
     <header className="site-header">
       <a className="brand" href="/" aria-label="Handheld Studio home">
@@ -137,7 +137,7 @@ export default function App() {
 
     <main>
       <div className="workbench-title">
-        <div><p className="eyebrow">THE HANDHELD STUDIO</p><h1>Make it yours<span>.</span></h1></div>
+        <div><p className="eyebrow">THE HANDHELD STUDIO</p><h1>Make it <span className="hero-highlight">yours<span className="hero-period">.</span></span></h1></div>
         <p className="title-note">A familiar object.<br />A new point of view.</p>
       </div>
       <div className={`workbench${playing ? ' is-playing' : ''}`}>
