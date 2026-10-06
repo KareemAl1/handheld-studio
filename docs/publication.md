@@ -94,3 +94,26 @@ The existing Three.js chunk warning remains: **709.79 kB minified / 183.03 kB gz
 A focused **Codex in-app-browser** smoke check of [the public studio](https://handheld-studio.vercel.app) on October 6 confirmed that the actual 3D model rendered, Ember shell selection worked, and Explode/Assemble operated. Play Signal Run opened the game; Start entered the running state with Pause controls, and Exit returned to inspection. No console errors were logged during those checked interactions. [Desktop capture](publication/live-desktop.jpg).
 
 This was a bounded live smoke check, not a fresh full browser regression run or standalone Chrome/Playwright run. No physical-phone test, new Safari test, frame-rate measurement, full game-loop assertion, save/share round-trip or downloaded-PNG verification was performed for this release. The earlier dated browser results and user-reported Safari feedback remain separate. A successful live smoke check alone does not establish which commit Vercel is serving.
+
+## 2026-10-06 color and motion update
+
+The studio now pairs oversized typography with an ultramarine Chalk stage, menthol Graphite stage, warm coral Ember stage and cobalt save/share section. Brief headline and device entrances, a settling stage reveal and tactile control feedback add motion without a continuous decorative loop. The existing renderer, model, game, configuration, saved builds, shared links and PNG-export logic are unchanged. Reduced-motion rules disable interface animations and transitions; the established reduced-motion camera and material behavior is retained.
+
+The production build passed after the final stage-label contrast fix, including current dependency notices, TypeScript and Vite. ESLint and **162 unit tests across seven files** also passed for this update. The existing Three.js warning remains **709.79 kB minified / 183.03 kB gzip**; no frame-rate or runtime performance improvement is claimed.
+
+The final local review used the **Codex in-app browser** at `http://127.0.0.1:5173`:
+
+| Check | Observed result |
+| --- | --- |
+| Desktop, 1280px wide | Saturated hero and actual model rendered; the HS–01 stage label was legible in ivory on cobalt |
+| Shell changes | Graphite and Ember updated their stage palettes; rapid Ember → Chalk selection returned to the matching palette |
+| Assembly | Explode reached 100%; Assemble returned to the assembled view |
+| Signal Run | Start entered the running UI with Pause controls; Exit returned to inspection |
+| Saved build | Saved Ember, reset the build, then Restore brought Ember back |
+| Phone viewport, 390 × 844 | Headline, model and controls remained readable with no horizontal overflow |
+
+The source update [`4bd2c2b`](https://github.com/KareemAl1/handheld-studio/commit/4bd2c2b950f199cc09ff695f776a77bb52b14642) was pushed to `main`; Vercel's automatically triggered Git deployment reached **READY**. A subsequent in-app-browser check of [the public studio](https://handheld-studio.vercel.app) at **1280 × 900** and **390 × 844** confirmed the updated hero and rendered model without horizontal overflow. The phone viewport also passed Graphite selection and Explode/Assemble. The captures below show that hosted update; these focused checks do not repeat the entire local interaction review.
+
+Production appearance: [desktop capture](publication/color-motion-desktop.jpg) · [phone viewport capture](publication/color-motion-phone.jpg). Earlier screenshots and verification records remain intact.
+
+This is a bounded interaction and visual review in the in-app browser, with a phone-sized viewport rather than a physical phone. Reduced-motion support received a source review for this final pass; no new reduced-motion browser run or frame-rate measurement is claimed. The final styling did not receive a full browser regression, native hidden-tab, share-link round-trip, full game-loop or downloaded-PNG check. An earlier partial run of existing Chrome/Playwright cases completed 20 passes on the initial styling before it was stopped; it preceded the final stage-color and contrast adjustments and is not a completed-suite result. Historical detailed browser results retain their original dates.

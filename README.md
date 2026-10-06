@@ -8,6 +8,7 @@ An original 3D handheld configurator and personal frontend project by [Kareem Al
 
 ## Features
 
+- **A colorful studio:** shell-responsive ultramarine, menthol and coral stages, oversized type and a cobalt save/share section. Brief headline/device reveals and tactile selection feedback settle at rest; reduced motion skips the animation.
 - **Inspect the object:** drag rotation, smooth wheel/trackpad and pinch zoom, bounded framing, camera presets, Fit and Reset.
 - **Make it yours:** three shell colors, three independent button colors, and solid or tinted translucent plastic — 18 combinations.
 - **Look inside:** animated assembly slider, five aligned component layers and selectable detail views. Internal components are an original illustrative concept.
@@ -18,11 +19,11 @@ An original 3D handheld configurator and personal frontend project by [Kareem Al
 
 ## Screenshots
 
-| Studio | Signal Run |
+| Current studio | Signal Run (September 14) |
 | --- | --- |
-| ![Live desktop configurator](docs/screenshots/live/site-desktop.png) | ![Signal Run on the live handheld screen](docs/screenshots/live/game-desktop.png) |
+| ![Desktop studio after the color and motion update](docs/publication/color-motion-desktop.jpg) | ![Signal Run on the live handheld screen](docs/screenshots/live/game-desktop.png) |
 
-[Live mobile configurator](docs/screenshots/live/site-mobile.png) · [Live mobile game](docs/screenshots/live/game-mobile.png) · [Exploded assembly](docs/screenshots/milestone-2/exploded-desktop.png)
+[Current phone viewport](docs/publication/color-motion-phone.jpg) · [Earlier mobile configurator](docs/screenshots/live/site-mobile.png) · [Live mobile game](docs/screenshots/live/game-mobile.png) · [Exploded assembly](docs/screenshots/milestone-2/exploded-desktop.png)
 
 These are actual browser captures and app-generated exports, not concept mockups.
 
@@ -88,6 +89,8 @@ npm run asset:export
 The editable source (817 KB), authoring/export scripts and runtime model (1.80 MB) stay in Git. Authoring sources and documentation are not served in the website build. No Blender installation is needed on Vercel.
 
 ## Verification and limits
+
+The [2026-10-06 color and motion update](docs/publication.md#2026-10-06-color-and-motion-update) adds the new studio palette and bounded interface animation. Build, lint and 162 unit tests passed; the final local in-app-browser review checked shell changes, assembly, starting/exiting Play, save/restore and a 390 × 844 phone viewport. See the report for the precise scope and limits.
 
 The [2026-10-06 documentation release](docs/publication.md#2026-10-06-documentation-release) published the reviewed notes to `main`. Fresh build, notices, TypeScript and lint checks passed, as did **162 unit tests across seven files**. A focused live in-app-browser smoke check covered model rendering, Ember selection, assembly and starting/exiting Signal Run with no console errors logged; the report records its narrower scope and links the desktop capture.
 
