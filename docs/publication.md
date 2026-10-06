@@ -74,3 +74,23 @@ Vercel-hosted routing, HTTPS clipboard/download permissions and real-device beha
 The proposed next action, only after explicit final approval, is to create public `KareemAl1/handheld-studio`, push the reviewed local `main` history, and create/deploy Vercel project `handheld-studio` under `kareems-projects-bc520863`. Verify both identities again before those actions. Do not operate on any sibling project or use a different GitHub account.
 
 After an approved deployment, inspect the HTTPS site and test the real share link, storage, game and PNG download there before calling publication complete.
+
+## 2026-10-06 documentation release
+
+The reviewed documentation history through [`8beedbf`](https://github.com/KareemAl1/handheld-studio/commit/8beedbf) was published to `main` in [KareemAl1/handheld-studio](https://github.com/KareemAl1/handheld-studio) with the owner's approval. The release records the September maintenance evidence, personal-project description and existing user-reported Safari feedback. The reviewed range changes documentation and screenshots only; application source, dependencies, models and deployment configuration are unchanged.
+
+Fresh local verification used **Node 22.12.0 / npm 10.9.0**:
+
+| Check | Actual result |
+| --- | --- |
+| `npm run build` | Passed: dependency notices, TypeScript and Vite 7.3.6; 613 modules transformed |
+| Dependency notices in the build | Current: 67 packages, 59 distinct texts, 128,485 bytes |
+| `npm run lint` | Passed |
+| `npm test -- --configLoader runner` | **162 tests passed across seven files** |
+| Documentation review | README document/image links resolved; `git diff --check` passed |
+
+The existing Three.js chunk warning remains: **709.79 kB minified / 183.03 kB gzip**. No size or performance improvement is claimed.
+
+A focused **Codex in-app-browser** smoke check of [the public studio](https://handheld-studio.vercel.app) on October 6 confirmed that the actual 3D model rendered, Ember shell selection worked, and Explode/Assemble operated. Play Signal Run opened the game; Start entered the running state with Pause controls, and Exit returned to inspection. No console errors were logged during those checked interactions. [Desktop capture](publication/live-desktop.jpg).
+
+This was a bounded live smoke check, not a fresh full browser regression run or standalone Chrome/Playwright run. No physical-phone test, new Safari test, frame-rate measurement, full game-loop assertion, save/share round-trip or downloaded-PNG verification was performed for this release. The earlier dated browser results and user-reported Safari feedback remain separate. A successful live smoke check alone does not establish which commit Vercel is serving.

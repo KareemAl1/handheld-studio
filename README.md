@@ -89,6 +89,8 @@ The editable source (817 KB), authoring/export scripts and runtime model (1.80 M
 
 ## Verification and limits
 
+The [2026-10-06 documentation release](docs/publication.md#2026-10-06-documentation-release) published the reviewed notes to `main`. Fresh build, notices, TypeScript and lint checks passed, as did **162 unit tests across seven files**. A focused live in-app-browser smoke check covered model rendering, Ember selection, assembly and starting/exiting Signal Run with no console errors logged; the report records its narrower scope and links the desktop capture.
+
 The **2026-10-01 documentation review** reran the existing production build (including dependency notices and TypeScript), ESLint, and unit suite under Node 22.12.0: **162 tests passed across seven files**. The existing Three.js chunk warning remains. A focused in-app-browser check also loaded the existing public deployment, verified the 3D asset and Ember shell selection, and found no console errors. No full browser suite rerun, physical-device test, or new deployment was performed; the broader browser evidence below retains its original dates.
 
 The [2026-09-29 local maintenance review](docs/maintenance-2026-09-29/README.md) adds fresh Chrome desktop, phone, tablet and 320px screenshots, 12 focused browser passes, and another passing 162-test unit run. Camera/game input, hidden-tab simulation, save/share, PNG export and failure recovery remained sound; no source changes were needed. The report includes a concise interview recap and a bounded follow-up list.
