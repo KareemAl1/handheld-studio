@@ -21,8 +21,8 @@ async function idle(page:Page) {
 test('game: actual screen completes start, collection, game over, restart and exit',async({page},info)=>{
   const errors:string[]=[]; page.on('pageerror',error=>errors.push(error.message));
   await enter(page);
-  await mkdir('docs/screenshots/milestone-3',{recursive:true});
-  await page.screenshot({path:`docs/screenshots/milestone-3/game-ready-${info.project.name}.png`,fullPage:true});
+  await mkdir('test-results/screenshots/milestone-3',{recursive:true});
+  await page.screenshot({path:`test-results/screenshots/milestone-3/game-ready-${info.project.name}.png`,fullPage:true});
   const camera=await page.evaluate(()=>window.__HS_STUDIO__!.snapshot().camera);
   const box=(await page.locator('canvas').boundingBox())!;
   await page.mouse.move(box.x+box.width*.4,box.y+box.height*.5);
@@ -35,7 +35,7 @@ test('game: actual screen completes start, collection, game over, restart and ex
   const initialTexture=await page.evaluate(()=>window.__HS_STUDIO__!.snapshot().game!.textureVersion);
   await expect(page.getByTestId('game-score')).toHaveText('10');
   expect(await page.evaluate(()=>window.__HS_STUDIO__!.snapshot().game!.textureVersion)).toBeGreaterThan(initialTexture);
-  await page.screenshot({path:`docs/screenshots/milestone-3/game-running-${info.project.name}.png`,fullPage:true});
+  await page.screenshot({path:`test-results/screenshots/milestone-3/game-running-${info.project.name}.png`,fullPage:true});
   await expect(page.locator('.game-panel')).toHaveAttribute('data-phase','over');
   await expect(page.getByRole('button',{name:'Restart game',exact:true})).toBeEnabled();
   await idle(page);

@@ -100,10 +100,10 @@ test('preview loads real assets and WebGL, then completes every shell and camera
   expect(pixelDifference(await canvas.screenshot(), chalk)).toBeLessThan(0.012);
   expect(assets).toEqual({ '/src/scene/StudioScene.tsx': 200, '/models/hs-01.glb': 200, '/images/hs-01-poster.webp': 200 });
   expect({ consoleErrors, pageErrors, failedRequests, httpErrors }).toEqual({ consoleErrors: [], pageErrors: [], failedRequests: [], httpErrors: [] });
-  await mkdir('docs/screenshots', { recursive: true });
+  await mkdir('test-results/screenshots', { recursive: true });
   await page.evaluate(() => window.scrollTo(0, 0));
-  await page.screenshot({ path: `docs/screenshots/repaired-${testInfo.project.name}.png`, fullPage: true });
-  await writeFile(`docs/screenshots/repaired-${testInfo.project.name}.json`, JSON.stringify({
+  await page.screenshot({ path: `test-results/screenshots/repaired-${testInfo.project.name}.png`, fullPage: true });
+  await writeFile(`test-results/screenshots/repaired-${testInfo.project.name}.json`, JSON.stringify({
     browser: page.context().browser()!.version(), headless: testInfo.project.use.headless ?? true,
     viewport: page.viewportSize(), webgl, poster, assets, differences,
     consoleErrors, pageErrors, failedRequests, httpErrors,
@@ -299,23 +299,23 @@ test('controls remain fully inside their panels at narrow widths and 200 percent
           expect(rect.y + rect.height, `bottom clip at ${width}px / ${textSize}px text`).toBeLessThanOrEqual(bounds.y + bounds.height + 0.5);
         }
       }
-      if (width === 320 && textSize === 32) await page.screenshot({ path: 'docs/screenshots/narrow-200-percent-text.png', fullPage: true });
+      if (width === 320 && textSize === 32) await page.screenshot({ path: 'test-results/screenshots/narrow-200-percent-text.png', fullPage: true });
     }
   }
 });
 
 test('capture reviewed layouts and measured active rendering', async ({ page }, testInfo) => {
   await openStudio(page);
-  await mkdir('docs/screenshots', { recursive: true });
-  await page.screenshot({ path: `docs/screenshots/${testInfo.project.name}-chalk.png`, fullPage: true });
+  await mkdir('test-results/screenshots', { recursive: true });
+  await page.screenshot({ path: `test-results/screenshots/${testInfo.project.name}-chalk.png`, fullPage: true });
   await page.getByRole('radio', { name: 'Ember', exact: true }).check();
   await settle(page);
   await page.evaluate(() => window.scrollTo(0, 0));
-  await page.screenshot({ path: `docs/screenshots/${testInfo.project.name}-ember.png`, fullPage: true });
+  await page.screenshot({ path: `test-results/screenshots/${testInfo.project.name}-ember.png`, fullPage: true });
   await page.getByRole('button', { name: 'Back', exact: true }).click();
   await settle(page);
   await page.evaluate(() => window.scrollTo(0, 0));
-  await page.screenshot({ path: `docs/screenshots/${testInfo.project.name}-back.png`, fullPage: true });
+  await page.screenshot({ path: `test-results/screenshots/${testInfo.project.name}-back.png`, fullPage: true });
   await page.getByRole('button', { name: 'Studio', exact: true }).click();
   await settle(page);
   const box = (await page.locator('canvas').boundingBox())!;
@@ -342,6 +342,6 @@ test('capture reviewed layouts and measured active rendering', async ({ page }, 
     activeFrameIntervalMeanMs: intervals.reduce((a, b) => a + b, 0) / intervals.length,
     note: 'Development build, scripted mouse orbit, installed Chrome headless on this host. Intervals measure render cadence, not GPU execution time. Mobile is viewport/touch emulation, not physical-device GPU performance.',
   };
-  await writeFile(`docs/screenshots/${testInfo.project.name}-performance.json`, JSON.stringify(report, null, 2));
+  await writeFile(`test-results/screenshots/${testInfo.project.name}-performance.json`, JSON.stringify(report, null, 2));
   expect(idleFrames).toBe(0);
 });

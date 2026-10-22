@@ -4,7 +4,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
-const output = 'docs/screenshots/milestone-2';
+const output = 'test-results/screenshots/milestone-2';
 const url = process.env.STUDIO_PROFILE_URL ?? 'http://127.0.0.1:5173/';
 const baseline = process.env.STUDIO_PROFILE_BASELINE === '1';
 await mkdir(output, { recursive: true });

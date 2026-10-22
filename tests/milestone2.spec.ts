@@ -83,8 +83,8 @@ test('camera: two-finger pinch zooms and releases cleanly back to rotation', asy
 test('camera: stage one screenshots and reduced-motion keyboard zoom', async ({ page }, info) => {
   await page.emulateMedia({ reducedMotion:'reduce' });
   await open(page);
-  await mkdir('docs/screenshots/milestone-2', {recursive:true});
-  await page.screenshot({path:`docs/screenshots/milestone-2/camera-check-${info.project.name}.png`,fullPage:true});
+  await mkdir('test-results/screenshots/milestone-2', {recursive:true});
+  await page.screenshot({path:`test-results/screenshots/milestone-2/camera-check-${info.project.name}.png`,fullPage:true});
   const zoom = page.getByRole('button',{name:'Zoom in',exact:true});
   await zoom.focus();
   await page.keyboard.press('Enter');
@@ -132,11 +132,11 @@ test('materials: every shell, button and finish combination settles and retains 
   await page.getByRole('button',{name:'Back',exact:true}).click();
   await settle(page);
   await page.evaluate(() => scrollTo(0,0));
-  await page.screenshot({path:`docs/screenshots/milestone-2/material-translucent-${info.project.name}.png`,fullPage:true});
+  await page.screenshot({path:`test-results/screenshots/milestone-2/material-translucent-${info.project.name}.png`,fullPage:true});
   await page.getByRole('button',{name:'Reset build'}).click();
   await settle(page);
   await page.evaluate(() => scrollTo(0,0));
-  await page.screenshot({path:`docs/screenshots/milestone-2/material-solid-${info.project.name}.png`,fullPage:true});
+  await page.screenshot({path:`test-results/screenshots/milestone-2/material-solid-${info.project.name}.png`,fullPage:true});
   const reset = await page.evaluate(() => window.__HS_STUDIO__!.snapshot());
   expect(reset.materials).toEqual({shell:'dad5c8',buttons:'333b37',transmission:0});
 });
@@ -165,7 +165,7 @@ test('assembly: interrupted transitions and slider always return all five layers
   await page.getByRole('button',{name:'Explode',exact:true}).click();
   await settle(page);
   await page.evaluate(() => scrollTo(0,0));
-  await page.screenshot({path:`docs/screenshots/milestone-2/exploded-${info.project.name}.png`,fullPage:true});
+  await page.screenshot({path:`test-results/screenshots/milestone-2/exploded-${info.project.name}.png`,fullPage:true});
   await page.getByRole('button',{name:'Concept board',exact:true}).click();
   await settle(page);
   expect((await page.evaluate(() => window.__HS_STUDIO__!.snapshot().zoom)).target[2]).toBe(-.65);
@@ -175,7 +175,7 @@ test('assembly: interrupted transitions and slider always return all five layers
   expect(await page.evaluate(() => window.__HS_STUDIO__!.snapshot().assembly)).toEqual(initial);
   expect((await page.evaluate(() => window.__HS_STUDIO__!.snapshot().zoom)).zoom).toBe(1);
   await page.evaluate(() => scrollTo(0,0));
-  await page.screenshot({path:`docs/screenshots/milestone-2/final-${info.project.name}.png`,fullPage:true});
+  await page.screenshot({path:`test-results/screenshots/milestone-2/final-${info.project.name}.png`,fullPage:true});
 });
 
 test('assembly: reduced motion and all component detail views remain operable', async ({page}) => {

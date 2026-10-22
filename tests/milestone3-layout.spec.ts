@@ -62,10 +62,10 @@ test('layout: capture final desktop and mobile build actions',async({page},info)
   await page.getByRole('radio',{name:'Translucent',exact:true}).check();
   await page.getByRole('button',{name:'Back',exact:true}).click();
   await page.waitForTimeout(350);
-  await mkdir('docs/screenshots/milestone-3',{recursive:true});
-  await page.screenshot({path:`docs/screenshots/milestone-3/final-${info.project.name}.png`,fullPage:true});
+  await mkdir('test-results/screenshots/milestone-3',{recursive:true});
+  await page.screenshot({path:`test-results/screenshots/milestone-3/final-${info.project.name}.png`,fullPage:true});
   await page.getByRole('button',{name:'Reset build'}).click();
   await page.getByRole('button',{name:'Play Signal Run',exact:true}).click();
   await expect(page.getByRole('button',{name:'Start game',exact:true})).toBeEnabled();
-  await page.screenshot({path:`docs/screenshots/milestone-3/play-${info.project.name}.png`,fullPage:true});
+  await page.screenshot({path:`test-results/screenshots/milestone-3/play-${info.project.name}.png`,fullPage:true});
 });

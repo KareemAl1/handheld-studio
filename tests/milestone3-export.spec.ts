@@ -6,7 +6,7 @@ import { PNG } from 'pngjs';
 
 test.use({ launchOptions: { downloadsPath: resolve('.cache/downloads') } });
 
-const directory = 'docs/screenshots/milestone-3';
+const directory = 'test-results/screenshots/milestone-3';
 const studio = (page: Page) => page.evaluate(() => window.__HS_STUDIO__!.snapshot());
 
 async function settle(page: Page) {

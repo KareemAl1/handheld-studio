@@ -6,7 +6,7 @@ import { chromium, expect } from '@playwright/test';
 import { PNG } from 'pngjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const artifacts = new URL('../docs/screenshots/milestone-2/', import.meta.url);
+const artifacts = new URL('../test-results/screenshots/milestone-2/', import.meta.url);
 const started = Date.now();
 const result = {
   passed: false,
