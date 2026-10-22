@@ -28,7 +28,7 @@ export function GameScreen({ object, session, playing }: { object: Object3D; ses
     });
     const context = texture.image.getContext('2d')!;
     const paint = () => {
-      drawGame(context, session.getState(), reduced); texture.needsUpdate = true;
+      drawGame(context, session.getState(), reduced, session.getSnapshot()); texture.needsUpdate = true;
       object.userData.game = { ...session.getSnapshot(), elapsed: session.getState().elapsed, textureVersion: texture.version };
       invalidate();
     };

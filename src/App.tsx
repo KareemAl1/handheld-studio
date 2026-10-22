@@ -33,7 +33,7 @@ export default function App() {
   const [ready, setReady] = useState(false);
   const [assembly, setAssembly] = useState(0);
   const [detail, setDetail] = useState<AssemblyPart | null>(null);
-  const [game] = useState(() => new GameSession());
+  const [game] = useState(() => new GameSession({ getStorage: () => window.localStorage }));
   const [playing, setPlaying] = useState(false);
   const [playReady, setPlayReady] = useState(false);
   const gameSummary = useGameLoop(game, playing);

@@ -12,7 +12,7 @@ An original 3D handheld configurator and personal frontend project by [Kareem Al
 - **Inspect the object:** drag rotation, smooth wheel/trackpad and pinch zoom, bounded framing, camera presets, Fit and Reset.
 - **Make it yours:** three shell colors, three independent button colors, and solid or tinted translucent plastic — 18 combinations.
 - **Look inside:** animated assembly slider, five aligned component layers and selectable detail views. Internal components are an original illustrative concept.
-- **Play Signal Run:** an original collect-and-dodge game on the actual screen material, with score, game over, restart, keyboard and touch controls. Play assembles the device and locks the camera; Exit returns to inspection.
+- **Play Signal Run:** an original collect-and-dodge game on the actual screen material, with score, a best score kept in this browser, game over, restart, keyboard and touch controls. Play assembles the device and locks the camera; Exit returns to inspection.
 - **Keep and share:** explicit local save/restore, validated versioned URL configuration and a selectable link if clipboard access fails.
 - **Export a product image:** opaque 1600 × 1200 PNG with clean assembled framing, the idle display and an ivory background. Export preserves the live camera, assembly and game.
 - **Handle real conditions:** reduced motion, keyboard focus, enlarged-text reflow, loading/retry states, WebGL fallback and context recovery.

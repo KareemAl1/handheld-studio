@@ -48,7 +48,7 @@ function hazard(context: CanvasRenderingContext2D, x: number, y: number) {
 }
 
 /** Entire original game display, drawn directly into the console's texture. */
-export function drawGame(context: CanvasRenderingContext2D, state: GameState, reducedMotion: boolean): void {
+export function drawGame(context: CanvasRenderingContext2D, state: GameState, reducedMotion: boolean, record?: { best: number; newBest: boolean }): void {
   context.save();
   context.setTransform(1, 0, 0, 1, 0, 0);
   context.globalAlpha = 1;
@@ -123,8 +123,11 @@ export function drawGame(context: CanvasRenderingContext2D, state: GameState, re
       text(context, `Score ${state.score}`, 512, 349, 34, '#a74725', 700, 'center');
       text(context, 'Resume below when you are ready.', 512, 424, 27, '#52634f', 500, 'center');
     } else {
-      text(context, `${state.score} points collected`, 512, 350, 36, '#a74725', 700, 'center');
-      text(context, 'Restart below for a fresh run.', 512, 424, 27, '#52634f', 500, 'center');
+      text(context, `${state.score} points collected`, 512, 344, 36, '#a74725', 700, 'center');
+      if (record) {
+        text(context, record.newBest ? 'NEW BEST' : `BEST ${record.best}`, 512, 386, 24, record.newBest ? '#a74725' : '#687466', 700, 'center');
+      }
+      text(context, 'Restart below for a fresh run.', 512, 436, 27, '#52634f', 500, 'center');
     }
   }
   context.restore();
