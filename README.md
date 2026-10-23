@@ -50,5 +50,3 @@ The HS-01 design, model, interface and game are original. These projects informe
 - [Wang Ruofeng, Orbital Core Showcase](https://github.com/wangruofeng/orbital-core-showcase)
 
 Third-party notices ship in [public/third-party-notices.txt](public/third-party-notices.txt).
-
-Made by [Kareem Alwan](https://kareemalwan.vercel.app).
