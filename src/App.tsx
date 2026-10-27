@@ -174,6 +174,6 @@ export default function App() {
       <BuildActions config={config} initialMessage={initialBuild.message} onRestore={value => dispatch({type:'restore',value})} exporter={exporter} />
       {!playing && <DetailViews selected={detail} onSelect={selectDetail} />}
     </main>
-    <footer className="site-footer"><span>An independent study by <strong>Kareem Alwan</strong></span><span className="footer-wordmark">GOOD THINGS. SMALL FORM.</span></footer>
+    <footer className="site-footer"><span>An independent design study</span><span className="footer-wordmark">GOOD THINGS. SMALL FORM.</span></footer>
   </div>;
 }
