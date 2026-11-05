@@ -11,6 +11,17 @@ export function BuildActions({ config, initialMessage, onRestore, exporter }: {
   const [shared, setShared] = useState<{ encoded: string; url: string } | null>(null);
   const linkInput = useRef<HTMLInputElement>(null);
   const [exporting, setExporting] = useState(false);
+  // Which button just worked. Its arrow trades places with a check for a beat.
+  const [done, setDone] = useState<{ id: string; tick: number } | null>(null);
+  const flash = (id: string) => setDone(d => ({ id, tick: (d?.tick ?? 0) + 1 }));
+  useEffect(() => {
+    if (!done) return;
+    const t = window.setTimeout(() => setDone(null), 1400);
+    return () => window.clearTimeout(t);
+  }, [done]);
+  const glyph = (id: string, arrow: string) => done?.id === id
+    ? <span key={`ok-${done.tick}`} className="action-glyph action-glyph--done" aria-hidden="true">✓</span>
+    : <span key={`arrow-${id}`} className="action-glyph" aria-hidden="true">{arrow}</span>;
   const [download, setDownload] = useState<{ url: string; name: string; encoded: string } | null>(null);
   useEffect(() => () => { if (download) URL.revokeObjectURL(download.url); }, [download]);
   const visibleLink = shared?.encoded === serializeConfig(config) ? shared.url : '';
@@ -20,12 +31,12 @@ export function BuildActions({ config, initialMessage, onRestore, exporter }: {
   };
   const save = () => {
     const result = writeSavedBuild(config, () => window.localStorage);
-    if (result.status === 'saved') { clearSharedQuery(); setMessage('Build saved in this browser.'); }
+    if (result.status === 'saved') { clearSharedQuery(); setMessage('Build saved in this browser.'); flash('save'); }
     else setMessage(result.message);
   };
   const restore = () => {
     const result = readSavedBuild(() => window.localStorage);
-    if (result.status === 'saved') { onRestore(result.config); clearSharedQuery(); setMessage('Saved build restored.'); }
+    if (result.status === 'saved') { onRestore(result.config); clearSharedQuery(); setMessage('Saved build restored.'); flash('restore'); }
     else setMessage(result.status === 'empty' ? 'No saved build yet. Choose your colors, then Save build.' : result.message);
   };
   const share = async () => {
@@ -34,7 +45,7 @@ export function BuildActions({ config, initialMessage, onRestore, exporter }: {
     try {
       if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
       await navigator.clipboard.writeText(url);
-      setMessage('Share link copied.');
+      setMessage('Share link copied.'); flash('share');
     } catch {
       setMessage('Clipboard unavailable. Select and copy the link below.');
       requestAnimationFrame(() => { linkInput.current?.focus(); linkInput.current?.select(); });
@@ -50,15 +61,15 @@ export function BuildActions({ config, initialMessage, onRestore, exporter }: {
       setDownload({url,name,encoded:serializeConfig(config)});
       const link = document.createElement('a'); link.href = url; link.download = name;
       document.body.append(link); link.click(); link.remove();
-      setMessage('PNG ready. Your assembled product image is 1600 × 1200 pixels.');
+      setMessage('PNG ready. Your assembled product image is 1600 × 1200 pixels.'); flash('export');
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'The PNG could not be created. Please try again.');
     } finally { setExporting(false); }
   };
   return <section className="build-actions" aria-label="Keep and share your build">
     <div className="build-actions-heading"><div><span className="eyebrow">YOUR PERSONAL EDITION</span><h2>Keep this one<span>.</span></h2></div><p>Your colors. Ready for another day.</p></div>
-    <div className="build-action-buttons"><button onClick={save}>Save build <span aria-hidden="true">↓</span></button><button onClick={restore}>Restore saved <span aria-hidden="true">↶</span></button><button onClick={() => void share()}>Copy share link <span aria-hidden="true">↗</span></button><button onClick={() => void exportPng()} disabled={!exporter || exporting}>{exporting ? 'Rendering PNG…' : 'Export PNG'} <span aria-hidden="true">↓</span></button></div>
-    <p className="build-feedback" role="status" aria-live="polite" data-testid="build-feedback">{message}</p>
+    <div className="build-action-buttons"><button onClick={save}>Save build {glyph('save', '↓')}</button><button onClick={restore}>Restore saved {glyph('restore', '↶')}</button><button onClick={() => void share()}>Copy share link {glyph('share', '↗')}</button><button onClick={() => void exportPng()} disabled={!exporter || exporting}>{exporting ? 'Rendering PNG…' : 'Export PNG'} {glyph('export', '↓')}</button></div>
+    <p className="build-feedback" role="status" aria-live="polite" data-testid="build-feedback"><span key={message} className="build-feedback__text">{message}</span></p>
     {download?.encoded === serializeConfig(config) && <a className="download-png" href={download.url} download={download.name}>Download PNG</a>}
     {visibleLink && <label className="share-link">Share link<input ref={linkInput} aria-label="Share link" type="url" readOnly value={visibleLink} onFocus={event => event.currentTarget.select()} /></label>}
     <p className="local-link-note">{localPreview ? 'Localhost links only work locally until deployment.' : 'Share links open this build on this site. Saved builds stay in this browser.'}</p>
